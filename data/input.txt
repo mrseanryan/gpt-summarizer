@@ -1,0 +1,41 @@
+Lost in the Middle: How Language Models Use Long Contexts
+
+Nelson F. Liu1∗ Kevin Lin2 John Hewitt1 Ashwin Paranjape3
+Michele Bevilacqua3 Fabio Petroni3 Percy Liang1
+1Stanford University 2University of California, Berkeley 3Samaya AI
+nfliu@cs.stanford.edu
+Abstract
+While recent language models have the ability
+to take long contexts as input, relatively little
+is known about how well the language models
+use longer context. We analyze language model
+performance on two tasks that require identifying relevant information within their input contexts: multi-document question answering and
+key-value retrieval. We find that performance is
+often highest when relevant information occurs
+at the beginning or end of the input context,
+and significantly degrades when models must
+access relevant information in the middle of
+long contexts. Furthermore, performance substantially decreases as the input context grows
+longer, even for explicitly long-context models.
+Our analysis provides a better understanding
+of how language models use their input context and provides new evaluation protocols for
+future long-context models.
+1 Introduction
+Language models have become an important and
+flexible building block in a variety of user-facing
+language technologies, including conversational
+interfaces, search and summarization, and collaborative writing. These models perform downstream
+tasks primarily via prompting: all relevant task
+specification and data to process is formatted as
+a textual context, and the model returns a generated text completion. These input contexts can
+contain thousands of tokens, especially when using
+language models on lengthy inputs (e.g., legal or
+scientific documents, conversation histories, etc.)
+or augmenting them with external information (e.g.,
+relevant documents from a search engine, database
+query results, etc; Petroni et al., 2020; Ram et al.,
+2023; Shi et al., 2023; Mallen et al., 2023; Schick
+et al., 2023, inter alia).
+Handling these use-cases requires language models to successfully operate over long sequences.
+*Work partially completed as an intern at Samaya AI.
+1st 5th 10th 15th 20th
