@@ -81,9 +81,9 @@ chunk_count = 1
 for text in input_text_list:
     prompt = ""
     if target_language is None:
-        prompt = prompts.get_summary_prompt_and_translate_to(text, target_language)
-    else:
         prompt = prompts.get_summarize_prompt(text)
+    else:
+        prompt = prompts.get_summary_prompt_and_translate_to(text, target_language)
     rsp = summarize(prompt)
 
     print_separator_heading(f"Short Summary = Chunk {chunk_count} of {len(input_text_list)}")

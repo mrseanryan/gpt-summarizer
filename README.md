@@ -13,7 +13,7 @@ Summarize text using ChatGPT
 Tip: make sure the text does not contain commercially or personally sensitive information!
 
 2. Run the `go.sh` script:
-`./go.sh [[target language]]`
+`./go.sh [target language]`
 
 ### Alternate Usage
 
