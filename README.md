@@ -8,11 +8,20 @@ Summarize text using ChatGPT
 
 ## Usage
 
-`./go.sh <path to input text file>`
+1. Copy the text you want to summarize, into `data/input.txt`.
 
-or
+Tip: make sure the text does not contain commercially or personally sensitive information!
 
-`python3 main_cli.py <path to input text file>`
+2. Run the `go.sh` script:
+`./go.sh [[target language]]`
+
+### Alternate Usage
+
+To summarize a different file:
+
+`python3 main_cli.py <path to input text file> [target language]`
+
+## Example Output
 
 The output is printed to STDOUT (terminal output):
 

@@ -13,14 +13,14 @@ The output format must be valid JSON, with the fields: short_summary, long_summa
 def build_next_prompt(input_text, target_language):
     return f"""
         Analyze the given input text, and create a short and long summary in the target language {target_language}.
-        The output text must be in the same style and tone as the input text.
+        The output text must be in a formal style, intended for an advanced reader.
         
         The input text is delimited by triple backticks.
 
-        The short summary text length should be {config.SHORT_SUMMARY_WORD_COUNT} words.
-        The long summary text length should be {config.LONG_SUMMARY_WORD_COUNT} words.
-
         {OUTPUT_FORMAT}
+
+        short_summary should be {config.SHORT_SUMMARY_WORD_COUNT} words long.
+        long_summary should be {config.LONG_SUMMARY_WORD_COUNT} words long.
 
     text: ```{input_text}```
     """
