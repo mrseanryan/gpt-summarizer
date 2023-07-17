@@ -104,3 +104,7 @@ mitigations:
 - asking the model to include a warning if it is not sure
 - ask to use relevant information
 - (ask to provide links to the source of the information)
+
+## Related
+
+Inspired by an excellent DeepLearning.ai course: [Prompt Engineering for Developers](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/)
