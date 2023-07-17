@@ -1,5 +1,5 @@
 # gpt-summarizer
-Summarize text using ChatGPT, with support for large text files and translation.
+Summarize text using ChatGPT, with support for large text files, PDF files and translation.
 
 ## Dependencies
 
@@ -15,11 +15,17 @@ Tip: make sure the text does not contain commercially or personally sensitive in
 2. Run the `go.sh` script:
 `./go.sh [target language]`
 
-### Alternate Usage
+### Alternate Usage - other text file
 
 To summarize a different file:
 
 `python3 main_cli.py <path to input text file> [target language]`
+
+### Alternate Usage - a PDF file
+
+**gpt-summarizer** can also summarize PDF files:
+
+`python3 main_cli.py <path to PDF file> [target language]`
 
 ## Example Output
 
@@ -37,7 +43,8 @@ This research focuses on understanding how language models utilize long contexts
 1. Install openai Python client.
 
 ```
-pip install openai
+python3 -m pip install --upgrade pip
+pip install --upgrade openai pymupdf
 ```
 
 2. Get an Open AI key

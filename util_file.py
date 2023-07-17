@@ -1,5 +1,7 @@
-def read_lines_from_file(filepath):
-    lines = []
+import util_pdf
+
+def read_text_from_file(filepath):
+    if util_pdf.is_pdf(filepath):
+        return util_pdf.extract_text_from_pdf(filepath)
     with open(filepath, encoding='utf-8') as file:
-        lines = [line.rstrip() for line in file]
-    return lines
+        return file.read()

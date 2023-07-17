@@ -14,7 +14,7 @@ if len(sys.argv) != 2 and len(sys.argv) != 3:
 path_to_input_file = sys.argv[1]
 target_language = None if (len(sys.argv) < 3) else sys.argv[2]
 
-input_text = "\n".join(util_file.read_lines_from_file(path_to_input_file))
+input_text = util_file.read_text_from_file(path_to_input_file)
 
 def divide_into_chunks(list, size):
     for i in range(0, len(list), size): 
