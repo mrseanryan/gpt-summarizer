@@ -1,5 +1,5 @@
 # gpt-summarizer
-Summarize text using ChatGPT
+Summarize text using ChatGPT, with support for large text files and translation.
 
 ## Dependencies
 
