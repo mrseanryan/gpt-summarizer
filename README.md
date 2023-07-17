@@ -1,4 +1,5 @@
 # gpt-summarizer
+
 Summarize text using ChatGPT, with support for large text files, PDF files and translation.
 
 ## Dependencies
@@ -13,6 +14,7 @@ Summarize text using ChatGPT, with support for large text files, PDF files and t
 Tip: make sure the text does not contain commercially or personally sensitive information!
 
 2. Run the `go.sh` script:
+
 `./go.sh [target language]`
 
 ### Alternate Usage - other text file
@@ -33,9 +35,23 @@ The output is printed to STDOUT (terminal output):
 
 ```
 === === Short Summary === ===
-Language models struggle to effectively use long contexts, with performance decreasing as the input context grows longer. Relevant information at the beginning or end of the context is better utilized than information in the middle. This analysis provides insights into how language models use their input context and suggests new evaluation protocols for future long-context models.
+Language models struggle to effectively use long contexts, with performance decreasing as the input context
+grows longer. Relevant information at the beginning or end of the context is better utilized than information
+in the middle. This analysis provides insights into how language models use their input context and suggests
+new evaluation protocols for future long-context models.
 === === Long Summary === ===
-This research focuses on understanding how language models utilize long contexts. While language models have the ability to take long contexts as input, little is known about how well they actually use this information. The study analyzes language model performance on two tasks: multi-document question answering and key-value retrieval. The findings reveal that performance is highest when relevant information is located at the beginning or end of the input context. However, when models need to access relevant information in the middle of long contexts, performance significantly degrades. Additionally, as the input context grows longer, performance decreases even for explicitly long-context models. The research provides valuable insights into the usage of input context by language models and proposes new evaluation protocols for future long-context models. This understanding is crucial for improving the effectiveness of language models in various user-facing language technologies, such as conversational interfaces, search and summarization, and collaborative writing. By addressing the challenges of effectively utilizing long contexts, language models can better handle lengthy inputs and external information, leading to enhanced performance in real-world applications.
+This research focuses on understanding how language models utilize long contexts. While language models have
+the ability to take long contexts as input, little is known about how well they actually use this information.
+The study analyzes language model performance on two tasks: multi-document question answering and key-value
+retrieval. The findings reveal that performance is highest when relevant information is located at the beginning
+or end of the input context. However, when models need to access relevant information in the middle of long
+contexts, performance significantly degrades. Additionally, as the input context grows longer, performance
+decreases even for explicitly long-context models. The research provides valuable insights into the usage of
+input context by language models and proposes new evaluation protocols for future long-context models. This
+understanding is crucial for improving the effectiveness of language models in various user-facing language
+technologies, such as conversational interfaces, search and summarization, and collaborative writing.
+By addressing the challenges of effectively utilizing long contexts, language models can better handle
+lengthy inputs and external information, leading to enhanced performance in real-world applications.
 ```
 
 ## Set up
