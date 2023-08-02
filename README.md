@@ -59,15 +59,24 @@ lengthy inputs and external information, leading to enhanced performance in real
 1. Install openai Python client.
 
 ```
-python3 -m pip install --upgrade pip
-pip install --upgrade openai pymupdf
+pip3 install --upgrade openai pymupdf
 ```
 
 2. Get an Open AI key
 
-3. Copy paste file `api-key.chatgpt.example.py` to `api-key.chatgpt.local.py`
+3. Set environment variable with your OpenAI key:
 
-4. Edit the local config file so that it contains your API key
+```
+export OPENAI_API_KEY="xxx"
+```
+
+Add that to your shell initializing script (`~/.zprofile` or similar)
+
+Load in current terminal:
+
+```
+source ~/.zprofile
+```
 
 ## Chat-GPT Notes
 

@@ -1,9 +1,9 @@
 import openai
 
-import api_key_chatgpt_local as api_key
 import config
+import service_api_key
 
-openai.api_key = api_key.get_openai_key()
+openai.api_key = service_api_key.get_openai_key()
 
 def get_completion(prompt, model="gpt-3.5-turbo", temperature = 0, messages = None):
     if messages is None:
