@@ -1,28 +1,43 @@
+from ctransformers import AutoModelForCausalLM
 import openai
 
 import config
 import service_api_key
 
-openai.api_key = service_api_key.get_openai_key()
+local_llm = None
+if config.is_local():
+    print(f"LOCAL AI model: {config.LOCAL_MODEL_FILE_PATH} [{config.LOCAL_MODEL_TYPE}]")
+    local_llm = AutoModelForCausalLM.from_pretrained(config.LOCAL_MODEL_FILE_PATH, model_type=config.LOCAL_MODEL_TYPE)
+else:
+    print(f"Open AI model: {config.OPEN_AI_MODEL}]")
+    openai.api_key = service_api_key.get_openai_key()
 
-def get_completion(prompt, model="gpt-3.5-turbo", temperature = 0, messages = None):
-    if messages is None:
-        messages = [{"role": "user", "content": prompt}]
+def get_completion_from_openai(prompt):
+    messages = [{"role": "user", "content": prompt}]
     response = openai.ChatCompletion.create(
-        model=model,
+        model=config.OPEN_AI_MODEL,
         messages=messages,
         # Temperature is the degree of randomness of the model's output
         # 0 would be same each time. 0.7 or 1 would be difference each time, and less likely words can be used:
-        temperature=temperature,
+        temperature=config.TEMPERATURE,
     )
     return response.choices[0].message["content"]
 
-def send_prompt(prompt, show_input = True, show_output = True, temperature = 0):
+def get_completion_from_local(prompt):
+    return local_llm(prompt)
+
+def get_completion(prompt):
+    if config.is_local():
+        return get_completion_from_local(prompt)
+    else:
+        return get_completion_from_openai(prompt)
+
+def send_prompt(prompt, show_input = True, show_output = True):
     if show_input:
         print("=== INPUT ===")
         print(prompt)
 
-    response = get_completion(prompt, temperature=temperature)
+    response = get_completion(prompt)
 
     if show_output:
         print("=== RESPONSE ===")
@@ -30,16 +45,7 @@ def send_prompt(prompt, show_input = True, show_output = True, temperature = 0):
 
     return response
 
-def send_prompt_messages(messages, temperature = 0):
-    last_message = messages[-1:]
-    print("=== LAST MESSAGE ===")
-    print(last_message)
-    rsp = get_completion(prompt=None, temperature=temperature, messages=messages)
-    print("=== RESPONSE ===")
-    print(rsp)
-    return rsp
-
 def next_prompt(prompt):
     if config.is_debug:
-        return send_prompt(prompt, temperature=config.TEMPERATURE)
-    return send_prompt(prompt, False, False, temperature=config.TEMPERATURE)
+        return send_prompt(prompt)
+    return send_prompt(prompt, False, False)

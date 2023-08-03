@@ -5,13 +5,20 @@ Summarize text using ChatGPT, with support for large text files, PDF files and t
 ## Dependencies
 
 - Python3
+
+If running a local LLM:
+
+- ctransformers
+
+If using Open AI Chat GPT:
+
 - Chat GTP 3.5 Turbo
 
 ## Usage
 
 1. Copy the text you want to summarize, into `data/input.txt`.
 
-Tip: make sure the text does not contain commercially or personally sensitive information!
+Tip: unless using a local LLM, make sure the text does not contain commercially or personally sensitive information!
 
 2. Run the `go.sh` script:
 
@@ -56,6 +63,13 @@ lengthy inputs and external information, leading to enhanced performance in real
 
 ## Set up
 
+**gpt-summary** can be used in 2 ways:
+
+1 - via remote LLM on Open-AI (Chat GPT)
+2 - OR via local LLM (see the model types supported by [ctransformers](https://github.com/marella/ctransformers)).
+
+### Option 1 - Open AI (Chat GPT)
+
 1. Install openai Python client.
 
 ```
@@ -77,6 +91,37 @@ Load in current terminal:
 ```
 source ~/.zprofile
 ```
+
+4. Set config.py to use open-ai
+
+Set the value of LOCAL_MODEL_FILE_PATH to be "".
+
+### Option 2 - Local LLM
+
+1. Install the ctransformers Python library
+
+
+```
+pip3 install --upgrade ctransformers pymupdf
+```
+
+2. Download a compatible model. To know what model types are supported, see the [ctransformers](https://github.com/marella/ctransformers) project.
+
+Quality models are available at hugging face - see [TheBloke](https://huggingface.co/TheBloke).
+
+Example: https://huggingface.co/TheBloke/Llama-2-13B-chat-GGML/resolve/main/llama-2-13b-chat.ggmlv3.q4_0.bin
+
+OR via bash:
+
+```
+./download-llama-2-13B-model.sh
+```
+
+3. Edit config.py
+
+Set `LOCAL_MODEL_FILE_PATH` to the path to the model file.
+
+For more details, see my [gpt-local](LOCAL_MODEL_FILE_PATH) wrapper project, or the main tool [ctransformers](https://github.com/marella/ctransformers).
 
 ## Chat-GPT Notes
 
