@@ -1,5 +1,6 @@
 from ctransformers import AutoModelForCausalLM
 import openai
+import time
 
 import config
 import service_api_key
@@ -7,7 +8,11 @@ import service_api_key
 local_llm = None
 if config.is_local():
     print(f"LOCAL AI model: {config.LOCAL_MODEL_FILE_PATH} [{config.LOCAL_MODEL_TYPE}]")
-    local_llm = AutoModelForCausalLM.from_pretrained(config.LOCAL_MODEL_FILE_PATH, model_type=config.LOCAL_MODEL_TYPE)
+    local_llm = None
+    if config.IS_GPU_ENABLED:
+        local_llm = AutoModelForCausalLM.from_pretrained(config.LOCAL_MODEL_FILE_PATH, model_type=config.LOCAL_MODEL_TYPE, gpu_layers=8)
+    else:
+        local_llm = AutoModelForCausalLM.from_pretrained(config.LOCAL_MODEL_FILE_PATH, model_type=config.LOCAL_MODEL_TYPE)
 else:
     print(f"Open AI model: {config.OPEN_AI_MODEL}]")
     openai.api_key = service_api_key.get_openai_key()
@@ -46,6 +51,13 @@ def send_prompt(prompt, show_input = True, show_output = True):
     return response
 
 def next_prompt(prompt):
+    start = time.time()
+    rsp = None
     if config.is_debug:
-        return send_prompt(prompt)
-    return send_prompt(prompt, False, False)
+        rsp = send_prompt(prompt)
+    else:
+        rsp = send_prompt(prompt, False, False)
+    end = time.time()
+    seconds_elapsed = end - start
+    print(f"Responded in {seconds_elapsed}s")
+    return rsp

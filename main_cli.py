@@ -84,18 +84,21 @@ chunk_count = 1
 for text in input_text_list:
     prompt = ""
     if config.is_local():
+        # TODO try fix
         if target_language is not None:
             raise(f"target_language is only supported when using Open AI ChatGPT")
         prompt = prompts.get_simple_summarize_prompt(text)
+        if config.LOCAL_MODEL_TYPE == "llama":
+            prompt = prompts.get_llama_summarize_prompt(text)
         response_plain = summarize_via_local(prompt)
         rsp = {
             'short_summary': response_plain
         }
     else:
         if target_language is None:
-            prompt = prompts.get_summarize_prompt(text)
+            prompt = prompts.get_chatgpt_summarize_prompt(text)
         else:
-            prompt = prompts.get_summary_prompt_and_translate_to(text, target_language)
+            prompt = prompts.get_chatgpt_summary_prompt_and_translate_to(text, target_language)
         rsp = summarize_via_open_ai(prompt)
 
     print_separator_heading(f"Short Summary = Chunk {chunk_count} of {len(input_text_list)}")

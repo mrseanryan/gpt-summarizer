@@ -68,6 +68,11 @@ lengthy inputs and external information, leading to enhanced performance in real
 1 - via remote LLM on Open-AI (Chat GPT)
 2 - OR via local LLM (see the model types supported by [ctransformers](https://github.com/marella/ctransformers)).
 
+First, edit config.py according to whether you can use GPU acceleration:
+- If you have an NVidia graphics card and have also installed CUDA, then set IS_GPU_ENABLED to be True.
+- Otherwise, set it to be False
+
+
 ### Option 1 - Open AI (Chat GPT)
 
 1. Install openai Python client.
