@@ -1,5 +1,12 @@
 import config
 
+def get_simple_summarize_prompt(input_text):
+    return f"""
+    Create a summary of this text:
+
+    {input_text}
+    """
+
 def get_summarize_prompt(input_text):
     return build_next_prompt(input_text, "English")
 

@@ -42,7 +42,7 @@ else:
 def print_separator_heading(heading):
     print(f"=== === {heading} === ===")
 
-def summarize(prompt):
+def summarize_via_open_ai(prompt):
     retries_remaining = config.RETRY_COUNT
     rsp_parsed = None
     while(not rsp_parsed and retries_remaining > 0):
@@ -74,17 +74,29 @@ def summarize(prompt):
         print(f"!!! RETRIES EXPIRED !!!")
     return rsp_parsed
 
+def summarize_via_local(prompt):
+    return util_chat.next_prompt(prompt)
+
 short_summary = ""
 long_summary = ""
 
 chunk_count = 1
 for text in input_text_list:
     prompt = ""
-    if target_language is None:
-        prompt = prompts.get_summarize_prompt(text)
+    if config.is_local():
+        if target_language is not None:
+            raise(f"target_language is only supported when using Open AI ChatGPT")
+        prompt = prompts.get_simple_summarize_prompt(text)
+        response_plain = summarize_via_local(prompt)
+        rsp = {
+            'short_summary': response_plain
+        }
     else:
-        prompt = prompts.get_summary_prompt_and_translate_to(text, target_language)
-    rsp = summarize(prompt)
+        if target_language is None:
+            prompt = prompts.get_summarize_prompt(text)
+        else:
+            prompt = prompts.get_summary_prompt_and_translate_to(text, target_language)
+        rsp = summarize_via_open_ai(prompt)
 
     print_separator_heading(f"Short Summary = Chunk {chunk_count} of {len(input_text_list)}")
     if rsp is not None:

@@ -1,7 +1,8 @@
 SHORT_SUMMARY_WORD_COUNT = 50
 LONG_SUMMARY_WORD_COUNT = 300
 
-MAIN_INPUT_TOKENS = 1500 # Chat-GPT has max 4097 tokens, but here we just split by space.
+MAIN_INPUT_TOKENS = 1500 # Chat-GPT has max 4097 tokens. For local model, you may want to use a lower limit for performance reasonse.
+# Note: when chunking, we just split by space not by tokens.
 
 RETRY_WAIT_SECONDS = 3
 RETRY_COUNT = 3
