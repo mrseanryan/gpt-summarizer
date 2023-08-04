@@ -126,6 +126,25 @@ OR via bash:
 
 Set `LOCAL_MODEL_FILE_PATH` to the path to the model file.
 
+### Using GPU with the local model
+
+If you have an NVIDIA graphics card, then you can run part or all of the model (depending on the card's RAM) on the GPU,
+which has much higher level of parallelism than the typical CPU.
+
+Required:
+- latest NVIDIA graphic driver
+- up to date version of CUDA
+
+# Tip: if you get errors when running the model, like this:
+# >> Cuda error: no kernel image is available for execution on the device
+# THEN recommend to build ctransformers locally.
+# This is actually quite simple:
+
+```
+pip3 uninstall ctransformers
+pip3 install ctransformers --no-binary ctransformers # use --no-binary to force a local build. This ensures that the local version of CUDA and NVIDIA graphics driver will be used.
+```
+
 For more details, see my [gpt-local](LOCAL_MODEL_FILE_PATH) wrapper project, or the main tool [ctransformers](https://github.com/marella/ctransformers).
 
 ## Chat-GPT Notes

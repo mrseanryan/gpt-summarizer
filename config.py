@@ -22,4 +22,4 @@ LOCAL_MODEL_TYPE="llama"
 def is_local():
     return len(LOCAL_MODEL_FILE_PATH) > 0
 
-IS_GPU_ENABLED=False # requires NVidia graphics card and CUDA 12 installed
+IS_GPU_ENABLED=False # Requires NVidia graphics card with latest driver and version of CUDA to match ctransformers
