@@ -145,6 +145,8 @@ pip3 uninstall ctransformers
 pip3 install ctransformers --no-binary ctransformers # use --no-binary to force a local build. This ensures that the local version of CUDA and NVIDIA graphics driver will be used.
 ```
 
+You can tweak the settings in `config.py`.
+
 For more details, see my [gpt-local](LOCAL_MODEL_FILE_PATH) wrapper project, or the main tool [ctransformers](https://github.com/marella/ctransformers).
 
 ## Chat-GPT Notes

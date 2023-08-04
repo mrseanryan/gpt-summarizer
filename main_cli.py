@@ -5,6 +5,7 @@ import config
 import prompts
 import util_chat
 import util_file
+import util_time
 import util_wait
 
 if len(sys.argv) != 2 and len(sys.argv) != 3:
@@ -45,10 +46,11 @@ def print_separator_heading(heading):
 def summarize_via_open_ai(prompt):
     retries_remaining = config.RETRY_COUNT
     rsp_parsed = None
+    elapsed_seconds = None
     while(not rsp_parsed and retries_remaining > 0):
         rsp = None
         try:
-            rsp = util_chat.next_prompt(prompt)
+            (rsp, elapsed_seconds) = util_chat.next_prompt(prompt)
             rsp_parsed = json.loads(rsp, strict=False)
         except Exception as error:
             print("!! error: ", error)
@@ -72,13 +74,14 @@ def summarize_via_open_ai(prompt):
 
     if rsp_parsed is None:
         print(f"!!! RETRIES EXPIRED !!!")
-    return rsp_parsed
+    return (rsp_parsed, elapsed_seconds)
 
 def summarize_via_local(prompt):
     return util_chat.next_prompt(prompt)
 
 short_summary = ""
 long_summary = ""
+elapsed_seconds = None
 
 chunk_count = 1
 for text in input_text_list:
@@ -90,7 +93,8 @@ for text in input_text_list:
         prompt = prompts.get_simple_summarize_prompt(text)
         if config.LOCAL_MODEL_TYPE == "llama":
             prompt = prompts.get_llama_summarize_prompt(text)
-        response_plain = summarize_via_local(prompt)
+        (response_plain, _elapsed_seconds) = summarize_via_local(prompt)
+        elapsed_seconds = _elapsed_seconds
         rsp = {
             'short_summary': response_plain
         }
@@ -99,7 +103,8 @@ for text in input_text_list:
             prompt = prompts.get_chatgpt_summarize_prompt(text)
         else:
             prompt = prompts.get_chatgpt_summary_prompt_and_translate_to(text, target_language)
-        rsp = summarize_via_open_ai(prompt)
+        (rsp, _elapsed_seconds) = summarize_via_open_ai(prompt)
+        elapsed_seconds = _elapsed_seconds
 
     print_separator_heading(f"Short Summary = Chunk {chunk_count} of {len(input_text_list)}")
     if rsp is not None:
@@ -116,3 +121,5 @@ print(short_summary)
 
 print_separator_heading("FULL Long Summary")
 print(long_summary)
+
+print(f" -- Responded after {util_time.describe_elapsed_seconds(elapsed_seconds)}")

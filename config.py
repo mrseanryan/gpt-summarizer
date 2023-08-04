@@ -14,8 +14,9 @@ TEMPERATURE = 0
 
 OPEN_AI_MODEL="gpt-3.5-turbo"
 
-# To use a local LLM, set this to the path to the model file:
-LOCAL_MODEL_FILE_PATH="/home/sean/Downloads/models/llama-2-13b-chat.ggmlv3.q4_0.bin"
+# To use a local LLM, set this to the path to the model file.
+# To use open-ai, set this to empty string ""
+LOCAL_MODEL_FILE_PATH="" #"/home/sean/Downloads/models/llama-2-13b-chat.ggmlv3.q4_0.bin"
 
 LOCAL_MODEL_TYPE="llama"
 
@@ -23,3 +24,4 @@ def is_local():
     return len(LOCAL_MODEL_FILE_PATH) > 0
 
 IS_GPU_ENABLED=False # Requires NVidia graphics card with latest driver and version of CUDA to match ctransformers
+LOCAL_GPU_LAYERS=8 # 8 worked for an NVidia card with 2 GB RAM, but maybe that also depends on the model?

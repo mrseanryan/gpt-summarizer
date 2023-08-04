@@ -1,16 +1,17 @@
 from ctransformers import AutoModelForCausalLM
 import openai
-import time
 
 import config
 import service_api_key
+import util_time
 
 local_llm = None
 if config.is_local():
-    print(f"LOCAL AI model: {config.LOCAL_MODEL_FILE_PATH} [{config.LOCAL_MODEL_TYPE}]")
+    gpu_message = f"Using {config.LOCAL_GPU_LAYERS} GPU layers" if config.IS_GPU_ENABLED else "NOT using GPU"
+    print(f"LOCAL AI model: {config.LOCAL_MODEL_FILE_PATH} [{config.LOCAL_MODEL_TYPE}] [{gpu_message}]")
     local_llm = None
     if config.IS_GPU_ENABLED:
-        local_llm = AutoModelForCausalLM.from_pretrained(config.LOCAL_MODEL_FILE_PATH, model_type=config.LOCAL_MODEL_TYPE, gpu_layers=8)
+        local_llm = AutoModelForCausalLM.from_pretrained(config.LOCAL_MODEL_FILE_PATH, model_type=config.LOCAL_MODEL_TYPE, gpu_layers=config.LOCAL_GPU_LAYERS)
     else:
         local_llm = AutoModelForCausalLM.from_pretrained(config.LOCAL_MODEL_FILE_PATH, model_type=config.LOCAL_MODEL_TYPE)
 else:
@@ -51,13 +52,11 @@ def send_prompt(prompt, show_input = True, show_output = True):
     return response
 
 def next_prompt(prompt):
-    start = time.time()
+    start = util_time.start_timer()
     rsp = None
     if config.is_debug:
         rsp = send_prompt(prompt)
     else:
         rsp = send_prompt(prompt, False, False)
-    end = time.time()
-    seconds_elapsed = end - start
-    print(f"Responded in {seconds_elapsed}s")
-    return rsp
+    elapsed_seconds = util_time.end_timer(start)
+    return (rsp, elapsed_seconds)
