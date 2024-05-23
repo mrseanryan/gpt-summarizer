@@ -110,7 +110,7 @@ First, edit config.py according to whether you can use GPU acceleration:
 1. Install openai Python client.
 
 ```
-pip3 install cornsnake==0.0.51 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1
+pip3 install cornsnake==0.0.53 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1
 ```
 
 2. Get an Open AI key

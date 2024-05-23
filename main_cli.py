@@ -23,7 +23,6 @@ from cornsnake import util_print, util_file, util_time, util_wait, util_dir
 import config
 import prompts
 import util_chat
-import util_file_ext
 
 
 # usage() - prints out the usage text, from the top of this file :-)
@@ -125,8 +124,8 @@ def divide_into_chunks(list, size):
 def _get_path_to_output_file(path_to_input_file, path_to_output_dir):
     if not path_to_output_dir:
         return None
-    input_filename = util_file_ext.get_last_part_of_path(path_to_input_file)
-    output_filename = util_file_ext.change_extension(
+    input_filename = util_file.get_last_part_of_path(path_to_input_file)
+    output_filename = util_file.change_extension(
         input_filename, ".yaml.txt"
     )  # adding .txt so can preview in Windows Explorer, Dropbox etc.
     path_to_output_file = os.path.join(path_to_output_dir, output_filename)
