@@ -2,3 +2,4 @@ api-key.chatgpt.local.py
 api_key_chatgpt_local.py
 __pycache__
 .DS_Store
+temp

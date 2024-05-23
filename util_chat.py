@@ -1,11 +1,10 @@
 import openai
 
-from cornsnake import util_print
+from cornsnake import util_print, util_time
 import config
 import prompts
 import service_api_key
 import util_cost_estimator
-import util_time
 
 local_llm = None
 if config.is_local():
@@ -18,7 +17,7 @@ if config.is_local():
     else:
         local_llm = AutoModelForCausalLM.from_pretrained(config.LOCAL_MODEL_FILE_PATH, model_type=config.LOCAL_MODEL_TYPE)
 else:
-    print(f"Open AI model: {config.OPEN_AI_MODEL}]")
+    print(f"Open AI model: [{config.OPEN_AI_MODEL}]")
     openai.api_key = service_api_key.get_openai_key()
 
 def get_completion_from_openai(prompt):

@@ -7,7 +7,7 @@ MAIN_INPUT_WORDS = 500 # Chat-GPT has max 4097 tokens. For local model, you may 
 RETRY_WAIT_SECONDS = 3
 RETRY_COUNT = 3
 
-is_debug = True
+is_debug = False
 
 # 0 would be same each time. 0.7 or 1 would be different each time, and less likely words can be used:
 TEMPERATURE = 0
@@ -33,3 +33,5 @@ TARGET_LANGUAGE = "English"
 OPENAI_COST_CURRENCY = "$"
 OPENAI_COST__PER_PROMPT_ONE_MILLION_TOKENS__USD = 0.50
 OPENAI_COST__PER_COMPLETION_ONE_MILLION_TOKENS__USD = 1.50
+
+SUPPORTED_FILE_EXTENSIONS=[".txt", ".yaml", "pdf"]

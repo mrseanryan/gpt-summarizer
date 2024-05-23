@@ -16,50 +16,80 @@ If using Open AI Chat GPT:
 
 ## Usage
 
-1. Copy the text you want to summarize, into `data/input.txt`.
+To see the available options:
+
+```
+./go.sh
+```
+
+or
+
+```
+python3 main_cli.py
+```
+
+Output:
+
+```
+Usage: main_cli.py <path to input file or input directory> [options]
+
+The options are:
+[-l --language - The target output language. The default is set in config.py]
+[-o --output - The output directory. By default is None, so output is to stdout (no files are output).]
+[-h --help]
+```
+
+1. Copy the text you want to summarize, into a file like `data/input.txt`.
 
 Tip: unless using a local LLM, make sure the text does not contain commercially or personally sensitive information!
 
 2. Run the `go.sh` script:
 
-`./go.sh [target language]`
+`./go.sh data/input.txt [options]`
 
 ### Alternate Usage - other text file
 
-To summarize a different file:
+To summarize different file(s):
 
-`python3 main_cli.py <path to input text file> [target language]`
+`python3 main_cli.py <path to input text file or directory> [options]`
 
 ### Alternate Usage - a PDF file
 
 **gpt-summarizer** can also summarize PDF files:
 
-`python3 main_cli.py <path to PDF file> [target language]`
+`python3 main_cli.py <path to PDF file or directory> [options]`
 
 ## Example Output
 
 The output is printed to STDOUT (terminal output):
 
 ```
-=== === Short Summary === ===
-Language models struggle to effectively use long contexts, with performance decreasing as the input context
-grows longer. Relevant information at the beginning or end of the context is better utilized than information
-in the middle. This analysis provides insights into how language models use their input context and suggests
-new evaluation protocols for future long-context models.
-=== === Long Summary === ===
-This research focuses on understanding how language models utilize long contexts. While language models have
-the ability to take long contexts as input, little is known about how well they actually use this information.
-The study analyzes language model performance on two tasks: multi-document question answering and key-value
-retrieval. The findings reveal that performance is highest when relevant information is located at the beginning
-or end of the input context. However, when models need to access relevant information in the middle of long
-contexts, performance significantly degrades. Additionally, as the input context grows longer, performance
-decreases even for explicitly long-context models. The research provides valuable insights into the usage of
-input context by language models and proposes new evaluation protocols for future long-context models. This
-understanding is crucial for improving the effectiveness of language models in various user-facing language
-technologies, such as conversational interfaces, search and summarization, and collaborative writing.
-By addressing the challenges of effectively utilizing long contexts, language models can better handle
-lengthy inputs and external information, leading to enhanced performance in real-world applications.
+=== === ===     [1] Summarizing './data/input.txt'      === === ===
+Summarizing file at './data/input.txt' into English...
+=== === ===     [2] Short Summary = Chunk 1 of 1        === === ===
+The study examines how language models perform with long contexts, finding that they struggle when relevant information is in the middle of the input. Performance decreases as context length increases, even for models designed for long contexts, offering insights for future model evaluation.
+=== === ===     [3] FULL Short Summary  === === ===
+The study examines how language models perform with long contexts, finding that they struggle when relevant information is in the middle of the input. Performance decreases as context length increases, even for models designed for long contexts, offering insights for future model evaluation.
+
+=== === ===     [4] FULL Long Summary   === === ===
+The research delves into the performance of language models when processing long contexts, revealing that models face challenges when relevant information is located in the middle of the input. As the context length grows, performance diminishes, impacting tasks like multi-document question answering and key-value retrieval. This study sheds light on how language models utilize input contexts and proposes new evaluation methods for forthcoming long-context models.
+
+=== === ===     [5] FULL paragraphs Summary     === === ===
+Recent language models can handle long contexts but struggle with utilizing longer context effectively.
+Performance is highest when relevant information is at the beginning or end of the input context.
+Models face significant degradation when required to access relevant information in the middle of long contexts.
+Performance decreases as the input context length increases, even for models explicitly designed for long contexts.
+The study offers insights into how language models utilize input context and suggests new evaluation protocols for future long-context models.
+ -- THIS FILE time: 0:00:05s
+ -- THIS FILE estimated cost: $0.0006715
+=== === ===     [6] Completed   === === ===
+1 files processed in 0:00:05s
+ -- Total estimated cost: $0.0006715
 ```
+
+Large files are broken into chunks for processing, with a single concatenated final output.
+
+Costs are estimated using the figures in `config.py`.
 
 ## Set up
 
@@ -78,7 +108,7 @@ First, edit config.py according to whether you can use GPU acceleration:
 1. Install openai Python client.
 
 ```
-pip3 install cornsnake==0.0.51 openai==1.23.6 PyMuPDF==1.24.1
+pip3 install cornsnake==0.0.51 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1
 ```
 
 2. Get an Open AI key
