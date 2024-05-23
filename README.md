@@ -167,10 +167,14 @@ Required:
 - latest NVIDIA graphic driver
 - up to date version of CUDA
 
-# Tip: if you get errors when running the model, like this:
-# >> Cuda error: no kernel image is available for execution on the device
-# THEN recommend to build ctransformers locally.
-# This is actually quite simple:
+#### Tip: if you get errors when running the model, like this:
+
+```
+>> Cuda error: no kernel image is available for execution on the device
+```
+Then recommend to build ctransformers locally.
+
+This is actually quite simple:
 
 ```
 pip3 uninstall ctransformers
