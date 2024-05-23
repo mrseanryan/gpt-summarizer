@@ -2,6 +2,17 @@
 
 Summarize text using ChatGPT or a local LLM, with support for multiple large text files, PDF files and translation.
 
+## Features
+
+- batch summarize whole directories of files
+- avoid re-summarizing a previously processed file
+- optionally use a locally hosted LLM, for maximum privacy and prevent any loss of IP (Intellectual Property)
+- translate to a target language
+- output files in YAML format (as opposed to JSON): cheaper for LLM to generate, easy for humans to read
+- output files with a “.yaml.txt” file extension, for easy previewing in storage tools like Dropbox and Google Drive
+- calculate cost estimates (when using OpenAI)
+
+
 ## Dependencies
 
 - Python3
