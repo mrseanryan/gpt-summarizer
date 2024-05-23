@@ -91,6 +91,8 @@ Large files are broken into chunks for processing, with a single concatenated fi
 
 Costs are estimated using the figures in `config.py`.
 
+If an output directory is specified as an option, then each input file has an equivalent output file, in YAML format.
+
 ## Set up
 
 **gpt-summary** can be used in 2 ways:
