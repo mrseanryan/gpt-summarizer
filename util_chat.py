@@ -9,23 +9,36 @@ import util_cost_estimator
 local_llm = None
 if config.is_local():
     from ctransformers import AutoModelForCausalLM
-    gpu_message = f"Using {config.LOCAL_GPU_LAYERS} GPU layers" if config.IS_GPU_ENABLED else "NOT using GPU"
-    print(f"LOCAL AI model: {config.LOCAL_MODEL_FILE_PATH} [{config.LOCAL_MODEL_TYPE}] [{gpu_message}]")
+
+    gpu_message = (
+        f"Using {config.LOCAL_GPU_LAYERS} GPU layers"
+        if config.IS_GPU_ENABLED
+        else "NOT using GPU"
+    )
+    print(
+        f"LOCAL AI model: {config.LOCAL_MODEL_FILE_PATH} [{config.LOCAL_MODEL_TYPE}] [{gpu_message}]"
+    )
     local_llm = None
     if config.IS_GPU_ENABLED:
-        local_llm = AutoModelForCausalLM.from_pretrained(config.LOCAL_MODEL_FILE_PATH, model_type=config.LOCAL_MODEL_TYPE, gpu_layers=config.LOCAL_GPU_LAYERS)
+        local_llm = AutoModelForCausalLM.from_pretrained(
+            config.LOCAL_MODEL_FILE_PATH,
+            model_type=config.LOCAL_MODEL_TYPE,
+            gpu_layers=config.LOCAL_GPU_LAYERS,
+        )
     else:
-        local_llm = AutoModelForCausalLM.from_pretrained(config.LOCAL_MODEL_FILE_PATH, model_type=config.LOCAL_MODEL_TYPE)
+        local_llm = AutoModelForCausalLM.from_pretrained(
+            config.LOCAL_MODEL_FILE_PATH, model_type=config.LOCAL_MODEL_TYPE
+        )
 else:
     print(f"Open AI model: [{config.OPEN_AI_MODEL}]")
     openai.api_key = service_api_key.get_openai_key()
 
+
 def get_completion_from_openai(prompt):
     messages = [
         {"role": "system", "content": prompts.SYSTEM_PROMPT__OPENAI},
-        {
-        "role": "user", "content": prompt
-        }]
+        {"role": "user", "content": prompt},
+    ]
 
     client = openai.OpenAI()
 
@@ -37,12 +50,16 @@ def get_completion_from_openai(prompt):
         temperature=config.TEMPERATURE,
     )
 
-    estimated_cost = util_cost_estimator.estimate_openai_cost(response.usage.prompt_tokens, response.usage.completion_tokens)
+    estimated_cost = util_cost_estimator.estimate_openai_cost(
+        response.usage.prompt_tokens, response.usage.completion_tokens
+    )
 
     return (response.choices[0].message.content, estimated_cost)
 
+
 def get_completion_from_local(prompt):
     return local_llm(prompt)
+
 
 def get_completion(prompt):
     if config.is_local():
@@ -50,7 +67,8 @@ def get_completion(prompt):
     else:
         return get_completion_from_openai(prompt)
 
-def send_prompt(prompt, show_input = True, show_output = True):
+
+def send_prompt(prompt, show_input=True, show_output=True):
     if show_input:
         util_print.print_section("=== REQUEST ===")
         print(prompt)
@@ -62,6 +80,7 @@ def send_prompt(prompt, show_input = True, show_output = True):
         print(response)
 
     return (response, cost)
+
 
 def next_prompt(prompt):
     start = util_time.start_timer()
