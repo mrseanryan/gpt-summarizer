@@ -12,7 +12,7 @@ If running a local LLM:
 
 If using Open AI Chat GPT:
 
-- Chat GTP 3.5 Turbo
+- Chat GTP 3.5 Turbo [requires an OpenAI API key]
 
 ## Usage
 

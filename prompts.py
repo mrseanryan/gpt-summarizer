@@ -28,8 +28,9 @@ def get_chatgpt_summary_prompt_and_translate_to(input_text, target_language):
     return build_next_prompt(input_text, target_language)
 
 
+# yaml is cheaper to generate
 OUTPUT_FORMAT = f"""
-The output format must be valid JSON, with the fields: short_summary, long_summary, paragraphs.
+The output format must be valid YAML, with the fields: short_summary, long_summary, paragraphs.
 """
 
 OUTPUT_TEXT_STYLE = "a formal style, intended for an advanced reader"

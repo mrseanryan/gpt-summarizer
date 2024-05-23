@@ -1,4 +1,3 @@
-import json
 import os
 import yaml
 
@@ -10,9 +9,9 @@ import util_chat
 
 
 def _clean_response(text):
-    prelim_with_json = "```json"
-    if prelim_with_json in text:
-        text = text.split(prelim_with_json)[1]
+    prelim_with_yaml = "```yaml"  # yaml is cheaper to generate
+    if prelim_with_yaml in text:
+        text = text.split(prelim_with_yaml)[1]
     end = "```"
     if end in text:
         text = text.split(end)[0]
@@ -31,25 +30,14 @@ def _summarize_via_open_ai(prompt):
             elapsed_seconds += _elapsed_seconds
             total_cost += cost
             rsp = _clean_response(rsp)
-            rsp_parsed = json.loads(
-                rsp, strict=False
-            )  # TODO consider using json5 which is more forgiving
+            rsp_parsed = yaml.safe_load(rsp)
         except Exception as error:
             print("!! error: ", error)
-            if rsp is not None:
-                try:
-                    # Try adding a closing } (why can't AI just make valid JSON ... ?)
-                    rsp_parsed = json.loads(rsp + "}", strict=False)
-                except Exception as error:
-                    print("!! error: ", error)
-                    # Just treat the response as text, not JSON:
-                    rsp_parsed = {"short_summary": rsp, "long_summary": rsp}
-            else:
-                if config.is_debug:
-                    print("REQ: ", prompt)
-                    print("RSP: ", rsp)
-                util_wait.wait_seconds(config.RETRY_WAIT_SECONDS)
-                retries_remaining -= 1
+            if config.is_debug:
+                print("REQ: ", prompt)
+                print("RSP: ", rsp)
+            util_wait.wait_seconds(config.RETRY_WAIT_SECONDS)
+            retries_remaining -= 1
 
     if rsp_parsed is None:
         print(f"!!! RETRIES EXPIRED !!!")
