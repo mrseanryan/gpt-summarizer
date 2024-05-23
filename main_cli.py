@@ -1,6 +1,8 @@
 import json
 import sys
 
+from cornsnake import util_print
+
 import config
 import prompts
 import util_chat
@@ -25,9 +27,9 @@ input_tokens = input_text.split(" ")
 input_tokens_count = len(input_tokens)
 input_text_list = []
 
-if (input_tokens_count > config.MAIN_INPUT_TOKENS):
-    print(f"! ! ! WARNING - Too many words in the input file! Max is {config.MAIN_INPUT_TOKENS} but that file has {input_tokens_count} words.")
-    chunks = divide_into_chunks(input_tokens, config.MAIN_INPUT_TOKENS)
+if (input_tokens_count > config.MAIN_INPUT_WORDS):
+    print(f"! ! ! WARNING - Too many words in the input file! Max is {config.MAIN_INPUT_WORDS} but that file has {input_tokens_count} words.")
+    chunks = divide_into_chunks(input_tokens, config.MAIN_INPUT_WORDS)
     input_text_list = []
     for chunk in chunks:
         input_text_list.append(" ".join(chunk))
@@ -41,17 +43,30 @@ else:
     print(f"Summarizing file at '{path_to_input_file}' into {target_language}...")
 
 def print_separator_heading(heading):
-    print(f"=== === {heading} === ===")
+    util_print.print_section(heading)
+
+def _clean_response(text):
+    prelim_with_json = "```json"
+    if prelim_with_json in text:
+        text = text.split(prelim_with_json)[1]
+    end = "```"
+    if end in text:
+        text = text.split(end)[0]
+    return text
 
 def summarize_via_open_ai(prompt):
     retries_remaining = config.RETRY_COUNT
     rsp_parsed = None
-    elapsed_seconds = None
+    elapsed_seconds = 0
+    total_cost = 0.0
     while(not rsp_parsed and retries_remaining > 0):
         rsp = None
         try:
-            (rsp, elapsed_seconds) = util_chat.next_prompt(prompt)
-            rsp_parsed = json.loads(rsp, strict=False)
+            (rsp, _elapsed_seconds, cost) = util_chat.next_prompt(prompt)
+            elapsed_seconds += _elapsed_seconds
+            total_cost += cost
+            rsp = _clean_response(rsp)
+            rsp_parsed = json.loads(rsp, strict=False)  # TODO consider using json5 which is more forgiving
         except Exception as error:
             print("!! error: ", error)
             if rsp is not None:
@@ -74,14 +89,16 @@ def summarize_via_open_ai(prompt):
 
     if rsp_parsed is None:
         print(f"!!! RETRIES EXPIRED !!!")
-    return (rsp_parsed, elapsed_seconds)
+    return (rsp_parsed, elapsed_seconds, total_cost)
 
 def summarize_via_local(prompt):
     return util_chat.next_prompt(prompt)
 
 short_summary = ""
 long_summary = ""
-elapsed_seconds = None
+paragraphs = []
+elapsed_seconds = 0
+cost = 0.0
 
 chunk_count = 1
 for text in input_text_list:
@@ -94,7 +111,7 @@ for text in input_text_list:
         if config.LOCAL_MODEL_TYPE == "llama":
             prompt = prompts.get_llama_summarize_prompt(text)
         (response_plain, _elapsed_seconds) = summarize_via_local(prompt)
-        elapsed_seconds = _elapsed_seconds
+        elapsed_seconds += _elapsed_seconds
         rsp = {
             'short_summary': response_plain
         }
@@ -103,8 +120,9 @@ for text in input_text_list:
             prompt = prompts.get_chatgpt_summarize_prompt(text)
         else:
             prompt = prompts.get_chatgpt_summary_prompt_and_translate_to(text, target_language)
-        (rsp, _elapsed_seconds) = summarize_via_open_ai(prompt)
-        elapsed_seconds = _elapsed_seconds
+        (rsp, _elapsed_seconds, _cost) = summarize_via_open_ai(prompt)
+        elapsed_seconds += _elapsed_seconds
+        cost += _cost
 
     print_separator_heading(f"Short Summary = Chunk {chunk_count} of {len(input_text_list)}")
     if rsp is not None:
@@ -113,6 +131,8 @@ for text in input_text_list:
             short_summary += rsp['short_summary'] + "\n"
         if 'long_summary' in rsp:
             long_summary += rsp['long_summary'] + "\n"
+        if 'paragraphs' in rsp:
+            paragraphs += rsp['paragraphs']
 
     chunk_count += 1
 
@@ -122,4 +142,9 @@ print(short_summary)
 print_separator_heading("FULL Long Summary")
 print(long_summary)
 
-print(f" -- Responded after {util_time.describe_elapsed_seconds(elapsed_seconds)}")
+print_separator_heading("FULL paragraphs Summary")
+print("\n".join(paragraphs))
+
+util_print.print_result(f" -- Total time: {util_time.describe_elapsed_seconds(elapsed_seconds)}")
+if cost > 0:
+    util_print.print_important(f" -- Total estimated cost: {config.OPENAI_COST_CURRENCY}{cost}")

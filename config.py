@@ -1,7 +1,7 @@
 SHORT_SUMMARY_WORD_COUNT = 50
 LONG_SUMMARY_WORD_COUNT = 300
 
-MAIN_INPUT_TOKENS = 500 # Chat-GPT has max 4097 tokens. For local model, you may want to use a lower limit for performance reasonse.
+MAIN_INPUT_WORDS = 500 # Chat-GPT has max 4097 tokens. For local model, you may want to use a lower limit for performance reasonse.
 # Note: when chunking, we just split by space not by tokens.
 
 RETRY_WAIT_SECONDS = 3
@@ -27,3 +27,9 @@ IS_GPU_ENABLED=False # Requires NVidia graphics card with latest driver and vers
 LOCAL_GPU_LAYERS=8 # 8 worked for an NVidia card with 2 GB RAM, but maybe that also depends on the model?
 
 TARGET_LANGUAGE = "English"
+
+# source = https://openai.com/api/pricing/
+# updated May 2024
+OPENAI_COST_CURRENCY = "$"
+OPENAI_COST__PER_PROMPT_ONE_MILLION_TOKENS__USD = 0.50
+OPENAI_COST__PER_COMPLETION_ONE_MILLION_TOKENS__USD = 1.50

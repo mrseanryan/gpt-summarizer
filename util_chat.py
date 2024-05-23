@@ -1,8 +1,10 @@
 import openai
 
+from cornsnake import util_print
 import config
 import prompts
 import service_api_key
+import util_cost_estimator
 import util_time
 
 local_llm = None
@@ -36,36 +38,38 @@ def get_completion_from_openai(prompt):
         temperature=config.TEMPERATURE,
     )
 
-    return response.choices[0].message.content
+    estimated_cost = util_cost_estimator.estimate_openai_cost(response.usage.prompt_tokens, response.usage.completion_tokens)
+
+    return (response.choices[0].message.content, estimated_cost)
 
 def get_completion_from_local(prompt):
     return local_llm(prompt)
 
 def get_completion(prompt):
     if config.is_local():
-        return get_completion_from_local(prompt)
+        return (get_completion_from_local(prompt), 0.0)
     else:
         return get_completion_from_openai(prompt)
 
 def send_prompt(prompt, show_input = True, show_output = True):
     if show_input:
-        print("=== INPUT ===")
+        util_print.print_section("=== REQUEST ===")
         print(prompt)
 
-    response = get_completion(prompt)
+    (response, cost) = get_completion(prompt)
 
     if show_output:
-        print("=== RESPONSE ===")
+        util_print.print_section("=== RESPONSE ===")
         print(response)
 
-    return response
+    return (response, cost)
 
 def next_prompt(prompt):
     start = util_time.start_timer()
     rsp = None
     if config.is_debug:
-        rsp = send_prompt(prompt)
+        (rsp, cost) = send_prompt(prompt)
     else:
-        rsp = send_prompt(prompt, False, False)
+        (rsp, cost) = send_prompt(prompt, False, False)
     elapsed_seconds = util_time.end_timer(start)
-    return (rsp, elapsed_seconds)
+    return (rsp, elapsed_seconds, cost)

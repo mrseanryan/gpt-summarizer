@@ -22,7 +22,7 @@ def get_chatgpt_summary_prompt_and_translate_to(input_text, target_language):
     return build_next_prompt(input_text, target_language)
 
 OUTPUT_FORMAT = f"""
-The output format must be valid JSON, with the fields: short_summary, long_summary.
+The output format must be valid JSON, with the fields: short_summary, long_summary, paragraphs.
 """
 
 OUTPUT_TEXT_STYLE = "a formal style, intended for an advanced reader"
@@ -40,6 +40,7 @@ def build_next_prompt(input_text, target_language):
 
         short_summary should be {config.SHORT_SUMMARY_WORD_COUNT} words long.
         long_summary should be {config.LONG_SUMMARY_WORD_COUNT} words long.
+        paragraphs should be an array of one sentence summaries: one sentence for each paragraph.
 
     text: ```{input_text}```
     """
