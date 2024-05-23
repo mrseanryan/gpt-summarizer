@@ -1,5 +1,19 @@
 outdir=./temp/output
-mkdir -p $outdir
-python3 main_cli.py ./data/input.txt  -o $outdir $1 $2 $3 $4
 
-ls -al $outdir
+if [ -d "$outdir" ]; then
+    rm -rf $outdir
+fi
+
+function test()
+{
+    mkdir -p $outdir
+    python3 main_cli.py ./data/input.txt  -o $outdir $1 $2 $3 $4
+
+    ls -al $outdir
+}
+
+test
+
+echo "== Run again - should skip files that already have an output =="
+
+test
