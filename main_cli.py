@@ -47,6 +47,7 @@ target_language = options.target_language
 path_to_output_dir = None
 if options.output_dir:
     path_to_output_dir = options.output_dir
+    util_dir.ensure_dir_exists(path_to_output_dir)
 
 # === PROCESS ONE INPUT FILE ===
 def print_separator_heading(heading):
@@ -115,14 +116,14 @@ def _get_path_to_output_file(path_to_input_file, path_to_output_dir):
 
 # TODO extract and refactor me
 def summarize_one_file(path_to_input_file, target_language, path_to_output_dir):
-    input_text = util_file.read_text_from_file(path_to_input_file)
+    input_text = util_file.read_text_from_text_or_pdf_file_skipping_comments(path_to_input_file)
 
     input_tokens = input_text.split(" ")
     input_tokens_count = len(input_tokens)
     input_text_list = []
 
     if (input_tokens_count > config.MAIN_INPUT_WORDS):
-        print(f"! ! ! WARNING - Too many words in the input file! Max is {config.MAIN_INPUT_WORDS} but that file has {input_tokens_count} words.")
+        util_print.print_warning(f"The input file has many words! Max is {config.MAIN_INPUT_WORDS} but that file has {input_tokens_count} words.")
         chunks = divide_into_chunks(input_tokens, config.MAIN_INPUT_WORDS)
         input_text_list = []
         for chunk in chunks:
