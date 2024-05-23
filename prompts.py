@@ -16,7 +16,7 @@ USER: Summarize this text denoted by backticks:
 #ASSISTANT:"""
 
 def get_chatgpt_summarize_prompt(input_text):
-    return build_next_prompt(input_text, "English")
+    return build_next_prompt(input_text, config.TARGET_LANGUAGE)
 
 def get_chatgpt_summary_prompt_and_translate_to(input_text, target_language):
     return build_next_prompt(input_text, target_language)
@@ -25,10 +25,14 @@ OUTPUT_FORMAT = f"""
 The output format must be valid JSON, with the fields: short_summary, long_summary.
 """
 
+OUTPUT_TEXT_STYLE = "a formal style, intended for an advanced reader"
+
+SYSTEM_PROMPT__OPENAI = f"You are a summary assistant, skilled in summarizing texts whilst preserving the main points. The target language is {config.TARGET_LANGUAGE}."
+
 def build_next_prompt(input_text, target_language):
     return f"""
         Analyze the given input text, and create a short and long summary in the target language {target_language}.
-        The output text must be in a formal style, intended for an advanced reader.
+        The output text must be in {OUTPUT_TEXT_STYLE}.
         
         The input text is delimited by triple backticks.
 

@@ -1,12 +1,13 @@
-from ctransformers import AutoModelForCausalLM
 import openai
 
 import config
+import prompts
 import service_api_key
 import util_time
 
 local_llm = None
 if config.is_local():
+    from ctransformers import AutoModelForCausalLM
     gpu_message = f"Using {config.LOCAL_GPU_LAYERS} GPU layers" if config.IS_GPU_ENABLED else "NOT using GPU"
     print(f"LOCAL AI model: {config.LOCAL_MODEL_FILE_PATH} [{config.LOCAL_MODEL_TYPE}] [{gpu_message}]")
     local_llm = None
@@ -19,15 +20,23 @@ else:
     openai.api_key = service_api_key.get_openai_key()
 
 def get_completion_from_openai(prompt):
-    messages = [{"role": "user", "content": prompt}]
-    response = openai.ChatCompletion.create(
+    messages = [
+        {"role": "system", "content": prompts.SYSTEM_PROMPT__OPENAI},
+        {
+        "role": "user", "content": prompt
+        }]
+
+    client = openai.OpenAI()
+
+    response = client.chat.completions.create(
         model=config.OPEN_AI_MODEL,
         messages=messages,
         # Temperature is the degree of randomness of the model's output
         # 0 would be same each time. 0.7 or 1 would be difference each time, and less likely words can be used:
         temperature=config.TEMPERATURE,
     )
-    return response.choices[0].message["content"]
+
+    return response.choices[0].message.content
 
 def get_completion_from_local(prompt):
     return local_llm(prompt)
