@@ -1,6 +1,6 @@
 # gpt-summarizer
 
-Summarize text using ChatGPT, with support for large text files, PDF files and translation.
+Summarize text using ChatGPT or a local LLM, with support for multiple large text files, PDF files and translation.
 
 ## Dependencies
 
