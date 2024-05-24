@@ -1,7 +1,17 @@
+import json
 import os
+import html2text
 import yaml
+from datetime import datetime
 
-from cornsnake import util_print, util_file, util_time, util_wait, util_dir
+from cornsnake import (
+    util_print,
+    util_file,
+    util_time,
+    util_wait,
+    util_dir,
+    util_network,
+)
 
 import config
 import prompts
@@ -117,10 +127,30 @@ def _print_file_result(short_summary, long_summary, paragraphs, elapsed_seconds,
         )
 
 
-def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir):
+def _extract_text(path_to_input_file):
     input_text = util_file.read_text_from_text_or_pdf_file_skipping_comments(
         path_to_input_file
     )
+    if path_to_input_file.endswith(".html"):
+        return html2text.html2text(input_text)
+
+    return input_text
+
+
+def _convert_array_to_str(a):
+    """
+    Occasionally LLM can return a dict where str was expected
+    """
+    if isinstance(a, str):
+        return a
+    if isinstance(a, dict):
+        util_print.print_warning("Unexpected response format: Converting dict to str")
+        return yaml.dump(a)
+    return a
+
+
+def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir):
+    input_text = _extract_text(path_to_input_file)
 
     input_text_chunks = _chunk_text_by_words(input_text)
 
@@ -167,11 +197,11 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
         if rsp is not None:
             if "short_summary" in rsp:
                 print(rsp["short_summary"])
-                short_summary += rsp["short_summary"] + "\n"
+                short_summary += _convert_array_to_str(rsp["short_summary"]) + "\n"
             if "long_summary" in rsp:
-                long_summary += rsp["long_summary"] + "\n"
+                long_summary += _convert_array_to_str(rsp["long_summary"]) + "\n"
             if "paragraphs" in rsp:
-                paragraphs += rsp["paragraphs"]
+                paragraphs += _convert_array_to_str(rsp["paragraphs"])
 
         chunk_count += 1
 
@@ -207,20 +237,64 @@ def _print_final_result(files_processed, elapsed_seconds, files_skipped, cost):
         )
 
 
-def summarize_file_or_dir(
-    path_to_input_file_or_dir, path_to_output_dir, target_language
+def _get_file_name_from_url(url):
+    # credit to scottleibrand
+
+    # Strip any trailing /'s from the end of the URL
+    stripped_url = url.rstrip("/")
+
+    # Get the base name of the URL
+    base_name = stripped_url.split("/")[-1]
+
+    for ext in config.SUPPORTED_FILE_EXTENSIONS:
+        if base_name.endswith(ext):
+            return base_name
+
+    return base_name + ".html"
+
+
+def _download_file(url):
+    filename = _get_file_name_from_url(url)
+
+    # add timestamp to make unique filename, since URL content may have changed
+    now = datetime.now()
+    timestamp = now.strftime("%Y_%m_%d__%H%M%S")
+    filename_parts = filename.split(".")
+    extension = filename_parts[-1]
+    filename_parts = filename_parts[:-1]
+    filename_parts += [timestamp, extension]
+    new_filename = ".".join(filename_parts)
+
+    local_filepath = os.path.join("./temp", f"downloaded-{new_filename}")
+
+    util_print.print_section(f"Downloading file")
+    util_print.print_custom(f"Downloading from {url} to {local_filepath} ...")
+    util_network.get_file(url, local_filepath)
+    util_print.print_result("[download complete]")
+    return local_filepath
+
+
+def _is_url(path):
+    return path.startswith("http")
+
+
+def summarize_file_or_dir_or_url(
+    path_to_input_file_or_dir_or_url, path_to_output_dir, target_language
 ):
     if path_to_output_dir:
         util_dir.ensure_dir_exists(path_to_output_dir)
 
     input_filepaths = []
-    if os.path.isdir(path_to_input_file_or_dir):
+    if os.path.isdir(path_to_input_file_or_dir_or_url):
         for extension in config.SUPPORTED_FILE_EXTENSIONS:
             input_filepaths += util_dir.find_files_recursively(
-                path_to_input_file_or_dir, extension
+                path_to_input_file_or_dir_or_url, extension
             )
+    if _is_url(path_to_input_file_or_dir_or_url):
+        local_filepath = _download_file(path_to_input_file_or_dir_or_url)
+        input_filepaths = [local_filepath]
     else:
-        input_filepaths = [path_to_input_file_or_dir]
+        input_filepaths = [path_to_input_file_or_dir_or_url]
 
     files_processed = 0
     files_skipped = 0

@@ -4,12 +4,15 @@ Summarize text using ChatGPT or a local LLM, with support for multiple large tex
 
 ## Features
 
+- summarize text, markdown, HTML, PDF files
 - batch summarize whole directories of files
+- summarize at different lavels: short, long, and per-paragraph
+- translate to a target language
+- download a file via URL and summarize it
 - avoid re-summarizing a previously processed file
 - optionally use a locally hosted LLM, for maximum privacy and prevent any loss of IP (Intellectual Property)
-- translate to a target language
 - output files in YAML format (as opposed to JSON): cheaper for LLM to generate, easy for humans to read
-- output files with a “.yaml.txt” file extension, for easy previewing in storage tools like Dropbox and Google Drive
+- output files with a “.yaml.txt” file extension, for easy previewing and search in storage tools like Dropbox or SharePoint or Google Drive
 - calculate cost estimates (when using OpenAI)
 
 
@@ -42,7 +45,7 @@ python3 main_cli.py
 Output:
 
 ```
-Usage: main_cli.py <path to input file or input directory> [options]
+Usage: main_cli.py <path to input file or input directory or URL> [options]
 
 The options are:
 [-l --language - The target output language. The default is set in config.py]
@@ -121,7 +124,7 @@ First, edit config.py according to whether you can use GPU acceleration:
 1. Install openai Python client.
 
 ```
-pip3 install cornsnake==0.0.53 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5
+pip3 install cornsnake==0.0.56 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5 html2text==2024.2.26
 ```
 
 2. Get an Open AI key

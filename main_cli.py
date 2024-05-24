@@ -4,7 +4,7 @@ Author: Sean Ryan
 
 Use an LLM to summarize text of PDF files.
 
-Usage: main_cli.py <path to input file or input directory> [options]
+Usage: main_cli.py <path to input file or input directory or URL> [options]
 
 The options are:
 [-l --language - The target output language. The default is set in config.py]
@@ -26,7 +26,9 @@ def usage():
 
 
 # optparse - parse the args
-parser = OptionParser(usage="%prog <path to input file or input directory> [options]")
+parser = OptionParser(
+    usage="%prog <path to input file or input directory or URL> [options]"
+)
 parser.add_option(
     "-l",
     "--language",
@@ -47,12 +49,12 @@ if len(args) != 1:
     usage()
     sys.exit(2)
 
-path_to_input_file_or_dir = sys.argv[1]
+path_to_input_file_or_dir_or_url = sys.argv[1]
 target_language = options.target_language
 path_to_output_dir = None
 if options.output_dir:
     path_to_output_dir = options.output_dir
 
-summarizer.summarize_file_or_dir(
-    path_to_input_file_or_dir, path_to_output_dir, target_language
+summarizer.summarize_file_or_dir_or_url(
+    path_to_input_file_or_dir_or_url, path_to_output_dir, target_language
 )
