@@ -96,7 +96,7 @@ def _chunk_text_by_words(input_text):
 
     if input_tokens_count > config.MAIN_INPUT_WORDS:
         util_print.print_warning(
-            f"The input file has many words! Max is {config.MAIN_INPUT_WORDS} but that file has {input_tokens_count} words."
+            f"The input file has many words! Max is {config.MAIN_INPUT_WORDS} but that file has {input_tokens_count} words. Will chunk the text."
         )
         chunks = _divide_into_chunks(input_words, config.MAIN_INPUT_WORDS)
         input_text_list = []
@@ -290,7 +290,7 @@ def summarize_file_or_dir_or_url(
             input_filepaths += util_dir.find_files_recursively(
                 path_to_input_file_or_dir_or_url, extension
             )
-    if _is_url(path_to_input_file_or_dir_or_url):
+    elif _is_url(path_to_input_file_or_dir_or_url):
         local_filepath = _download_file(path_to_input_file_or_dir_or_url)
         input_filepaths = [local_filepath]
     else:
