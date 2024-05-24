@@ -99,6 +99,8 @@ The study offers insights into how language models utilize input context and sug
  -- Total estimated cost: $0.0006715
 ```
 
+See also an example of [summarizing this README](./example_output/downloaded--README.2024_05_24__150934.yaml.txt).
+
 Large files are broken into chunks for processing, with a single concatenated final output.
 
 Costs are estimated using the figures in `config.py`.
@@ -122,7 +124,7 @@ First, edit config.py according to whether you can use GPU acceleration:
 1. Install openai Python client.
 
 ```
-pip3 install cornsnake==0.0.56 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5 html2text==2024.2.26
+pip install cornsnake==0.0.57 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5 html2text==2024.2.26
 ```
 
 2. Get an Open AI key

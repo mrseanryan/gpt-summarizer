@@ -1,8 +1,6 @@
-import json
 import os
 import html2text
 import yaml
-from datetime import datetime
 
 from cornsnake import (
     util_print,
@@ -237,40 +235,13 @@ def _print_final_result(files_processed, elapsed_seconds, files_skipped, cost):
         )
 
 
-def _get_file_name_from_url(url):
-    # credit to scottleibrand
-
-    # Strip any trailing /'s from the end of the URL
-    stripped_url = url.rstrip("/")
-
-    # Get the base name of the URL
-    base_name = stripped_url.split("/")[-1]
-
-    for ext in config.SUPPORTED_FILE_EXTENSIONS:
-        if base_name.endswith(ext):
-            return base_name
-
-    return base_name + ".html"
-
-
 def _download_file(url):
-    filename = _get_file_name_from_url(url)
+    util_print.print_section(f"Downloading file")
+    util_print.print_custom(f"Downloading from {url} ...")
 
     # add timestamp to make unique filename, since URL content may have changed
-    now = datetime.now()
-    timestamp = now.strftime("%Y_%m_%d__%H%M%S")
-    filename_parts = filename.split(".")
-    extension = filename_parts[-1]
-    filename_parts = filename_parts[:-1]
-    filename_parts += [timestamp, extension]
-    new_filename = ".".join(filename_parts)
-
-    local_filepath = os.path.join("./temp", f"downloaded-{new_filename}")
-
-    util_print.print_section(f"Downloading file")
-    util_print.print_custom(f"Downloading from {url} to {local_filepath} ...")
-    util_network.get_file(url, local_filepath)
-    util_print.print_result("[download complete]")
+    local_filepath = util_network.get_file_timestamped(url, "./temp", prefix="downloaded-", text_file_extensions=config.SUPPORTED_FILE_EXTENSIONS)
+    util_print.print_result(f"[download complete] {local_filepath}")
     return local_filepath
 
 
