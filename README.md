@@ -6,16 +6,13 @@ Summarize text using ChatGPT or a local LLM, with support for multiple large tex
 
 | Area | Feature |
 |---|---|
-| File types | Summarize text, markdown, HTML, PDF files |
-| Summarization levels | Summarize at different lavels: short, long, and per-paragraph |
-| Translation | Translate to a target language |
-| Data sources | Batch summarize whole directories of files |
-| Data sources | Download a file via URL and summarize it |
-| Private LLM | Optionally use a locally hosted LLM, for maximum privacy and prevent any loss of IP (Intellectual Property) |
-| Cost savings | Avoid re-summarizing a previously processed file |
-| Cost savings | Calculate cost estimates (when using Open AI) |
-| Output files | Output files in YAML format (as opposed to JSON): cheaper for LLM to generate, easy for humans to read |
-| Output files | Output files with a “.yaml.txt” file extension, for easy previewing and search in storage tools like Dropbox or SharePoint or Google Drive |
+| File types | - Summarize text, markdown, HTML, PDF files |
+| Summarization levels | - Summarize at different lavels: short, long, and per-paragraph |
+| Translation | - Translate to a target language |
+| Data sources | - Batch summarize whole directories of files <br/> - Download a file via URL and summarize it |
+| Private LLM | - Optionally use a locally hosted LLM, for maximum privacy and prevent any loss of IP (Intellectual Property) |
+| Cost savings | - Avoid re-summarizing a previously processed file<br/> - Calculate cost estimates (when using Open AI) |
+| Output files | - Output files in YAML format (as opposed to JSON): cheaper for LLM to generate, easy for humans to read <br/> - Output files with a “.yaml.txt” file extension, for easy previewing and search in storage tools like Dropbox or SharePoint or Google Drive |
 
 ## Dependencies
 
