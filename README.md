@@ -4,17 +4,18 @@ Summarize text using ChatGPT or a local LLM, with support for multiple large tex
 
 ## Features
 
-- summarize text, markdown, HTML, PDF files
-- batch summarize whole directories of files
-- summarize at different lavels: short, long, and per-paragraph
-- translate to a target language
-- download a file via URL and summarize it
-- avoid re-summarizing a previously processed file
-- optionally use a locally hosted LLM, for maximum privacy and prevent any loss of IP (Intellectual Property)
-- output files in YAML format (as opposed to JSON): cheaper for LLM to generate, easy for humans to read
-- output files with a “.yaml.txt” file extension, for easy previewing and search in storage tools like Dropbox or SharePoint or Google Drive
-- calculate cost estimates (when using OpenAI)
-
+| Area | Feature |
+|---|---|
+| File types | Summarize text, markdown, HTML, PDF files |
+| Summarization levels | Summarize at different lavels: short, long, and per-paragraph |
+| Translation | Translate to a target language |
+| Data sources | Batch summarize whole directories of files |
+| Data sources | Download a file via URL and summarize it |
+| Private LLM | Optionally use a locally hosted LLM, for maximum privacy and prevent any loss of IP (Intellectual Property) |
+| Cost savings | Avoid re-summarizing a previously processed file |
+| Cost savings | Calculate cost estimates (when using Open AI) |
+| Output files | Output files in YAML format (as opposed to JSON): cheaper for LLM to generate, easy for humans to read |
+| Output files | Output files with a “.yaml.txt” file extension, for easy previewing and search in storage tools like Dropbox or SharePoint or Google Drive |
 
 ## Dependencies
 
@@ -26,7 +27,7 @@ If running a local LLM:
 
 If using Open AI Chat GPT:
 
-- Chat GTP 3.5 Turbo [requires an OpenAI API key]
+- Chat GTP 3.5 Turbo [requires an Open AI API key]
 
 ## Usage
 
@@ -129,7 +130,7 @@ pip3 install cornsnake==0.0.56 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff
 
 2. Get an Open AI key
 
-3. Set environment variable with your OpenAI key:
+3. Set environment variable with your Open AI key:
 
 ```
 export OPENAI_API_KEY="xxx"
