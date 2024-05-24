@@ -4,15 +4,15 @@ Summarize text using ChatGPT or a local LLM, with support for multiple large tex
 
 ## Features
 
-| Area | Feature |
-|---|---|
-| File types | - Summarize text, markdown, HTML, PDF files |
-| Summarization levels | - Summarize at different lavels: short, long, and per-paragraph |
-| Translation | - Translate to a target language |
-| Data sources | - Batch summarize whole directories of files <br/> - Download a file via URL and summarize it |
-| Private LLM | - Optionally use a locally hosted LLM, for maximum privacy and prevent any loss of IP (Intellectual Property) |
-| Cost savings | - Avoid re-summarizing a previously processed file<br/> - Calculate cost estimates (when using Open AI) |
-| Output files | - Output files in YAML format (as opposed to JSON): cheaper for LLM to generate, easy for humans to read <br/> - Output files with a “.yaml.txt” file extension, for easy previewing and search in storage tools like Dropbox or SharePoint or Google Drive |
+| Area                 | Feature                                                                                                                                                                                                                                                     |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| File types           | - Summarize text, markdown, HTML, PDF files                                                                                                                                                                                                                 |
+| Summarization levels | - Summarize at different lavels: short, long, and per-paragraph                                                                                                                                                                                             |
+| Translation          | - Translate to a target language                                                                                                                                                                                                                            |
+| Data sources         | - Batch summarize whole directories of files <br/> - Download a file via URL and summarize it                                                                                                                                                               |
+| Private LLM          | - Optionally use a locally hosted LLM, for maximum privacy and prevent any loss of IP (Intellectual Property)                                                                                                                                               |
+| Cost savings         | - Avoid re-summarizing a previously processed file<br/> - Calculate cost estimates (when using Open AI)                                                                                                                                                     |
+| Output files         | - Output files in YAML format (as opposed to JSON): cheaper for LLM to generate, easy for humans to read <br/> - Output files with a “.yaml.txt” file extension, for easy previewing and search in storage tools like Dropbox or SharePoint or Google Drive |
 
 ## Dependencies
 
@@ -113,9 +113,9 @@ If an output directory is specified as an option, then each input file has an eq
 2 - OR via local LLM (see the model types supported by [ctransformers](https://github.com/marella/ctransformers)).
 
 First, edit config.py according to whether you can use GPU acceleration:
+
 - If you have an NVidia graphics card and have also installed CUDA, then set IS_GPU_ENABLED to be True.
 - Otherwise, set it to be False
-
 
 ### Option 1 - Open AI (Chat GPT)
 
@@ -149,7 +149,6 @@ Set the value of LOCAL_MODEL_FILE_PATH to be "".
 
 1. Install the ctransformers Python library
 
-
 ```
 pip3 install --upgrade ctransformers pymupdf
 ```
@@ -176,6 +175,7 @@ If you have an NVIDIA graphics card, then you can run part or all of the model (
 which has much higher level of parallelism than the typical CPU.
 
 Required:
+
 - latest NVIDIA graphic driver
 - up to date version of CUDA
 
@@ -184,6 +184,7 @@ Required:
 ```
 >> Cuda error: no kernel image is available for execution on the device
 ```
+
 Then recommend to build ctransformers locally.
 
 This is actually quite simple:
