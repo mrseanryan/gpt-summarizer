@@ -9,6 +9,8 @@ RETRY_COUNT = 3
 
 is_debug = False
 
+is_local__json_not_yaml = True  # YAML is generally cheaper and faster, but some LLMs may be more reliable with JSON
+
 # 0 would be same each time. 0.7 or 1 would be different each time, and less likely words can be used:
 TEMPERATURE = 0
 
@@ -65,3 +67,8 @@ def is_local_via_ollama():
 
 def is_openai():
     return not _is_local_via_ctransformers() and not _is_local_via_ollama()
+
+def is_json_not_yaml():
+    if is_openai():
+        return False
+    return is_local__json_not_yaml

@@ -124,7 +124,7 @@ First, edit config.py according to whether you can use GPU acceleration:
 1. Install openai Python client.
 
 ```
-pip install cornsnake==0.0.57 html2text==2024.2.26 ollama==0.2.0 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5
+pip install cornsnake==0.0.57 html2text==2024.2.26 json5==0.9.25 ollama==0.2.0 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5
 ```
 
 2. Get an Open AI key
@@ -170,6 +170,15 @@ ollama serve
 
 Edit config.py - set `OLLAMA_MODEL_NAME` to the name of the model from step 2
 Set the value of `LOCAL_CTRANSFORMERS_MODEL_FILE_PATH` to be "".
+
+#### Tip: if you find there are many retries when parsing the LLM output, then try switching between JSON and YAML.
+
+YAML is generally cheaper and faster, but some LLMs may be more reliable if asked to output JSON.
+
+For a local LLM, you can decide which format to use via `config.py`:
+
+- edit the value of `is_local__json_not_yaml`
+
 
 ### Option 3 - Local LLM via ctransformers
 

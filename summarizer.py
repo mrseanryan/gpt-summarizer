@@ -1,5 +1,6 @@
 import os
 import html2text
+import json5
 import yaml
 
 from cornsnake import (
@@ -17,9 +18,9 @@ import util_chat
 
 
 def _clean_response(text):
-    prelim_with_yaml = "```yaml"  # yaml is cheaper to generate
-    if prelim_with_yaml in text:
-        text = text.split(prelim_with_yaml)[1]
+    prelim_with_data_format = f"```{prompts.get_output_format_name().lower()}"
+    if prelim_with_data_format in text:
+        text = text.split(prelim_with_data_format)[1]
 
     delimit = "```"
     if delimit in text:
@@ -46,7 +47,11 @@ def _summarize_with_retry(prompt):
             elapsed_seconds += _elapsed_seconds
             total_cost += cost
             rsp = _clean_response(rsp)
-            rsp_parsed = yaml.safe_load(rsp)
+            rsp_parsed = None
+            if config.is_json_not_yaml():
+                rsp_parsed = json5.loads(rsp)  # a bit more robust than json package
+            else:
+                rsp_parsed = yaml.safe_load(rsp)
         except Exception as error:
             util_print.print_error("Error parsing response")
             util_print.print_error(error)
