@@ -37,20 +37,28 @@ OLLAMA_MODEL_NAME = "llama3"
 
 SUPPORTED_FILE_EXTENSIONS = [".html", ".md", ".pdf", ".txt", ".yaml"]
 
+
 def _is_local_via_ctransformers():
     return len(LOCAL_CTRANSFORMERS_MODEL_FILE_PATH) > 0
+
 
 def _is_local_via_ollama():
     return len(OLLAMA_MODEL_NAME) > 0
 
+
 def is_local_via_ctransformers():
     is_enabled = _is_local_via_ctransformers()
     if is_enabled and _is_local_via_ollama():
-        raise ValueError("Please check config.py: both local via ctransformers AND ollama are enabled")
+        raise ValueError(
+            "Please check config.py: both local via ctransformers AND ollama are enabled"
+        )
     return is_enabled
+
 
 def is_local_via_ollama():
     is_enabled = _is_local_via_ollama()
     if is_enabled and _is_local_via_ctransformers():
-        raise ValueError("Please check config.py: both local via ctransformers AND ollama are enabled")
+        raise ValueError(
+            "Please check config.py: both local via ctransformers AND ollama are enabled"
+        )
     return is_enabled

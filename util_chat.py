@@ -28,7 +28,8 @@ if config.is_local_via_ctransformers():
         )
     else:
         local_llm = AutoModelForCausalLM.from_pretrained(
-            config.LOCAL_CTRANSFORMERS_MODEL_FILE_PATH, model_type=config.LOCAL_CTRANSFORMERS_MODEL_TYPE
+            config.LOCAL_CTRANSFORMERS_MODEL_FILE_PATH,
+            model_type=config.LOCAL_CTRANSFORMERS_MODEL_TYPE,
         )
 elif config.is_local_via_ollama():
     print(f"ollama model: [{config.OLLAMA_MODEL_NAME}]")
@@ -63,13 +64,15 @@ def get_completion_from_openai(prompt):
 def get_completion_from_local(prompt):
     return local_llm(prompt)
 
+
 def get_completion_from_ollama(prompt):
     messages = [
         {"role": "system", "content": prompts.SYSTEM_PROMPT__OPENAI},
         {"role": "user", "content": prompt},
     ]
     response = ollama.chat(model=config.OLLAMA_MODEL_NAME, messages=messages)
-    return response['message']['content']
+    return response["message"]["content"]
+
 
 def get_completion(prompt):
     if config.is_local_via_ctransformers():

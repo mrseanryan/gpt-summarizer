@@ -183,7 +183,7 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
                 )
             (rsp, _elapsed_seconds, _cost) = _summarize_with_retry(prompt)
             elapsed_seconds += _elapsed_seconds
-            cost += _cost            
+            cost += _cost
         elif config.is_openai():
             if target_language is None:
                 prompt = prompts.get_chatgpt_summarize_prompt(text)
@@ -195,7 +195,9 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
             elapsed_seconds += _elapsed_seconds
             cost += _cost
         else:
-            raise ValueError("Please check config.py - one of openai, local via ctransformers OR ollama should be enabled.")
+            raise ValueError(
+                "Please check config.py - one of openai, local via ctransformers OR ollama should be enabled."
+            )
 
         util_print.print_section(
             f"Short Summary = Chunk {chunk_count} of {len(input_text_chunks)}"
@@ -248,7 +250,12 @@ def _download_file(url):
     util_print.print_custom(f"Downloading from {url} ...")
 
     # add timestamp to make unique filename, since URL content may have changed
-    local_filepath = util_network.get_file_timestamped(url, "./temp", prefix="downloaded-", text_file_extensions=config.SUPPORTED_FILE_EXTENSIONS)
+    local_filepath = util_network.get_file_timestamped(
+        url,
+        "./temp",
+        prefix="downloaded-",
+        text_file_extensions=config.SUPPORTED_FILE_EXTENSIONS,
+    )
     util_print.print_result(f"[download complete] {local_filepath}")
     return local_filepath
 
