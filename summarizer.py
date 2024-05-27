@@ -234,13 +234,18 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
             f"Short Summary = Chunk {chunk_count} of {len(input_text_chunks)}"
         )
         if rsp is not None:
-            if "short_summary" in rsp:
-                print(rsp["short_summary"])
-                short_summary += _convert_array_to_str(rsp["short_summary"]) + "\n"
-            if "long_summary" in rsp:
-                long_summary += _convert_array_to_str(rsp["long_summary"]) + "\n"
-            if "paragraphs" in rsp:
-                paragraphs += _convert_array_of_dict_to_array(rsp["paragraphs"])
+            if isinstance(rsp, str):
+                util_print.print_warning("Response is string - expected dict")
+                print(rsp)
+                short_summary += rsp + "\n"
+            else:
+                if "short_summary" in rsp:
+                    print(rsp["short_summary"])
+                    short_summary += _convert_array_to_str(rsp["short_summary"]) + "\n"
+                if "long_summary" in rsp:
+                    long_summary += _convert_array_to_str(rsp["long_summary"]) + "\n"
+                if "paragraphs" in rsp:
+                    paragraphs += _convert_array_of_dict_to_array(rsp["paragraphs"])
 
         chunk_count += 1
 
