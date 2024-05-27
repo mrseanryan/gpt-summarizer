@@ -17,15 +17,20 @@ USER: Summarize this text denoted by backticks:
 ```{input_text}```"""
 
 
-# ASSISTANT:"""
-
-
 def get_chatgpt_summarize_prompt(input_text):
     return build_next_prompt(input_text, config.TARGET_LANGUAGE)
 
 
 def get_chatgpt_summary_prompt_and_translate_to(input_text, target_language):
     return build_next_prompt(input_text, target_language)
+
+
+def get_ollama_summarize_prompt(input_text):
+    return get_chatgpt_summarize_prompt(input_text)
+
+
+def get_ollama_summary_prompt_and_translate_to(input_text, target_language):
+    return get_chatgpt_summary_prompt_and_translate_to(input_text, target_language)
 
 
 # yaml is cheaper to generate

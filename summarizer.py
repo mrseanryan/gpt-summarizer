@@ -26,7 +26,7 @@ def _clean_response(text):
     return text
 
 
-def _summarize_via_open_ai(prompt):
+def _summarize_with_retry(prompt):
     retries_remaining = config.RETRY_COUNT
     rsp_parsed = None
     elapsed_seconds = 0
@@ -50,10 +50,6 @@ def _summarize_via_open_ai(prompt):
     if rsp_parsed is None:
         print(f"!!! RETRIES EXPIRED !!!")
     return (rsp_parsed, elapsed_seconds, total_cost)
-
-
-def _summarize_via_local(prompt):
-    return util_chat.next_prompt(prompt)
 
 
 def _divide_into_chunks(list, size):
@@ -168,26 +164,38 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
     chunk_count = 1
     for text in input_text_chunks:
         prompt = ""
-        if config.is_local():
+        if config.is_local_via_ctransformers():
             # TODO try fix
             if target_language is not None:
                 raise (f"target_language is only supported when using Open AI ChatGPT")
             prompt = prompts.get_simple_summarize_prompt(text)
-            if config.LOCAL_MODEL_TYPE == "llama":
+            if config.LOCAL_CTRANSFORMERS_MODEL_TYPE == "llama":
                 prompt = prompts.get_llama_summarize_prompt(text)
-            (response_plain, _elapsed_seconds) = _summarize_via_local(prompt)
+            (response_plain, _elapsed_seconds) = _summarize_with_retry(prompt)
             elapsed_seconds += _elapsed_seconds
             rsp = {"short_summary": response_plain}
-        else:
+        elif config.is_local_via_ollama():
+            if target_language is None:
+                prompt = prompts.get_ollama_summarize_prompt(text)
+            else:
+                prompt = prompts.get_ollama_summary_prompt_and_translate_to(
+                    text, target_language
+                )
+            (rsp, _elapsed_seconds, _cost) = _summarize_with_retry(prompt)
+            elapsed_seconds += _elapsed_seconds
+            cost += _cost            
+        elif config.is_openai():
             if target_language is None:
                 prompt = prompts.get_chatgpt_summarize_prompt(text)
             else:
                 prompt = prompts.get_chatgpt_summary_prompt_and_translate_to(
                     text, target_language
                 )
-            (rsp, _elapsed_seconds, _cost) = _summarize_via_open_ai(prompt)
+            (rsp, _elapsed_seconds, _cost) = _summarize_with_retry(prompt)
             elapsed_seconds += _elapsed_seconds
             cost += _cost
+        else:
+            raise ValueError("Please check config.py - one of openai, local via ctransformers OR ollama should be enabled.")
 
         util_print.print_section(
             f"Short Summary = Chunk {chunk_count} of {len(input_text_chunks)}"

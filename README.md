@@ -124,7 +124,7 @@ First, edit config.py according to whether you can use GPU acceleration:
 1. Install openai Python client.
 
 ```
-pip install cornsnake==0.0.57 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5 html2text==2024.2.26
+pip install cornsnake==0.0.57 html2text==2024.2.26 ollama==0.2.0 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5
 ```
 
 2. Get an Open AI key
@@ -145,9 +145,33 @@ source ~/.zprofile
 
 4. Set config.py to use open-ai
 
-Set the value of LOCAL_MODEL_FILE_PATH to be "".
+Set the value of `LOCAL_CTRANSFORMERS_MODEL_FILE_PATH` to be "".
+Set the value of `OLLAMA_MODEL_NAME` to be "".
 
-### Option 2 - Local LLM
+### Option 2 - Local LLM via ollama [recommended approach for local LLM]
+
+1. Install ollama
+
+- see [ollama site](https://ollama.com/download)
+
+2. Pull a compatible model - for example llama3 or phi3 [depending on your hardware]
+
+```
+ollama pull llama3
+```
+
+3. Run ollama
+
+```
+ollama serve
+```
+
+4. Configure gpt-summarizer to use ollama
+
+Edit config.py - set `OLLAMA_MODEL_NAME` to the name of the model from step 2
+Set the value of `LOCAL_CTRANSFORMERS_MODEL_FILE_PATH` to be "".
+
+### Option 3 - Local LLM via ctransformers
 
 1. Install the ctransformers Python library
 
@@ -169,7 +193,8 @@ OR via bash:
 
 3. Edit config.py
 
-Set `LOCAL_MODEL_FILE_PATH` to the path to the model file.
+Set `LOCAL_CTRANSFORMERS_MODEL_FILE_PATH` to the path to the model file.
+Set `OLLAMA_MODEL_NAME` to be "".
 
 ### Using GPU with the local model
 
