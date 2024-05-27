@@ -20,9 +20,17 @@ def _clean_response(text):
     prelim_with_yaml = "```yaml"  # yaml is cheaper to generate
     if prelim_with_yaml in text:
         text = text.split(prelim_with_yaml)[1]
-    end = "```"
-    if end in text:
-        text = text.split(end)[0]
+
+    delimit = "```"
+    if delimit in text:
+        parts = text.split(delimit)
+        max_len = 0
+        selected = ""
+        for part in parts:
+            if len(part) > max_len:
+                selected = part
+                max_len = len(part)
+        return selected
     return text
 
 
@@ -40,15 +48,20 @@ def _summarize_with_retry(prompt):
             rsp = _clean_response(rsp)
             rsp_parsed = yaml.safe_load(rsp)
         except Exception as error:
-            print("!! error: ", error)
+            util_print.print_error("Error parsing response")
+            util_print.print_error(error)
             if config.is_debug:
                 print("REQ: ", prompt)
                 print("RSP: ", rsp)
-            util_wait.wait_seconds(config.RETRY_WAIT_SECONDS)
+            if config.is_openai():
+                util_wait.wait_seconds(config.RETRY_WAIT_SECONDS)
             retries_remaining -= 1
+            if retries_remaining:
+                util_print.print_warning("Retrying...")
+
 
     if rsp_parsed is None:
-        print(f"!!! RETRIES EXPIRED !!!")
+        util_print.print_error(f"!!! RETRIES EXPIRED !!!")
     return (rsp_parsed, elapsed_seconds, total_cost)
 
 
@@ -140,8 +153,26 @@ def _convert_array_to_str(a):
     if isinstance(a, dict):
         util_print.print_warning("Unexpected response format: Converting dict to str")
         return yaml.dump(a)
+    if isinstance(a, list):
+        util_print.print_warning("Unexpected response format: Converting list to str")
+        return yaml.dump(a)
     return a
 
+
+def _convert_array_of_dict_to_array(a_list):
+    if isinstance(a_list, list):
+        new_list = []
+        for a1 in a_list:
+            if isinstance(a1, dict):
+                new_list.append(yaml.dump(a1))
+            elif isinstance(a1, list):
+                new_list += a1
+            else:
+                new_list.append(a1)
+        return new_list
+    elif isinstance(a1, dict):
+        return yaml.dump(a1)
+    return a_list
 
 def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir):
     input_text = _extract_text(path_to_input_file)
@@ -209,7 +240,7 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
             if "long_summary" in rsp:
                 long_summary += _convert_array_to_str(rsp["long_summary"]) + "\n"
             if "paragraphs" in rsp:
-                paragraphs += _convert_array_to_str(rsp["paragraphs"])
+                paragraphs += _convert_array_of_dict_to_array(rsp["paragraphs"])
 
         chunk_count += 1
 

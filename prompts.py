@@ -36,6 +36,10 @@ def get_ollama_summary_prompt_and_translate_to(input_text, target_language):
 # yaml is cheaper to generate
 OUTPUT_FORMAT = f"""
 The output format must be valid YAML, with the fields: short_summary, long_summary, paragraphs.
+- do NOT include YAML special characters in the text (for example: single quotes or colons)
+- do NOT use the line-continuation operator '|'
+- for bullets use hyphen '-', do NOT use '*'
+- denote the overall output with ``` NOT '---'
 """
 
 OUTPUT_TEXT_STYLE = "a formal style, intended for an advanced reader"
