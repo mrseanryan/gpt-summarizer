@@ -60,5 +60,9 @@ def build_next_prompt(input_text, target_language):
         long_summary should be {config.LONG_SUMMARY_WORD_COUNT} words long.
         paragraphs should be an array of one sentence summaries: one sentence for each paragraph.
 
+        IMPORTANT: Double-check that the output is valid YAML.
+
     text: ```{input_text}```
+
+    assistant: ```yaml
     """
