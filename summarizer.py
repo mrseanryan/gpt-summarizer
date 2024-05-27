@@ -64,7 +64,6 @@ def _summarize_with_retry(prompt):
             if retries_remaining:
                 util_print.print_warning("Retrying...")
 
-
     if rsp_parsed is None:
         util_print.print_error(f"!!! RETRIES EXPIRED !!!")
     return (rsp_parsed, elapsed_seconds, total_cost)
@@ -178,6 +177,7 @@ def _convert_array_of_dict_to_array(a_list):
     elif isinstance(a1, dict):
         return yaml.dump(a1)
     return a_list
+
 
 def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir):
     input_text = _extract_text(path_to_input_file)

@@ -65,8 +65,10 @@ def is_local_via_ollama():
         )
     return is_enabled
 
+
 def is_openai():
     return not _is_local_via_ctransformers() and not _is_local_via_ollama()
+
 
 def is_json_not_yaml():
     if is_openai():

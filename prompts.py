@@ -46,15 +46,17 @@ OUTPUT_FORMAT_JSON = f"""
 The output format must be valid JSON, with the fields: short_summary, long_summary, paragraphs.
 """
 
+
 def _get_output_format():
     if config.is_json_not_yaml():
         return OUTPUT_FORMAT_JSON
     return OUTPUT_FORMAT_YAML
 
+
 def get_output_format_name():
     if config.is_json_not_yaml():
-        return 'JSON'
-    return 'YAML'
+        return "JSON"
+    return "YAML"
 
 
 OUTPUT_TEXT_STYLE = "a formal style, intended for an advanced reader"
