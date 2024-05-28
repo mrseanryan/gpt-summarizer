@@ -15,7 +15,7 @@ from cornsnake import (
 import config
 import prompts
 import util_chat
-
+import util_config
 
 def _clean_response(text):
     prelim_with_data_format = f"```{prompts.get_output_format_name().lower()}"
@@ -48,7 +48,7 @@ def _summarize_with_retry(prompt):
             total_cost += cost
             rsp = _clean_response(rsp)
             rsp_parsed = None
-            if config.is_json_not_yaml():
+            if util_config.is_json_not_yaml():
                 rsp_parsed = json5.loads(rsp)  # a bit more robust than json package
             else:
                 rsp_parsed = yaml.safe_load(rsp)
@@ -58,7 +58,7 @@ def _summarize_with_retry(prompt):
             if config.is_debug:
                 print("REQ: ", prompt)
                 print("RSP: ", rsp)
-            if config.is_openai():
+            if util_config.is_openai():
                 util_wait.wait_seconds(config.RETRY_WAIT_SECONDS)
             retries_remaining -= 1
             if retries_remaining:
@@ -200,7 +200,7 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
     chunk_count = 1
     for text in input_text_chunks:
         prompt = ""
-        if config.is_local_via_ctransformers():
+        if util_config.is_local_via_ctransformers():
             # TODO try fix
             if target_language is not None:
                 raise (f"target_language is only supported when using Open AI ChatGPT")
@@ -210,7 +210,7 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
             (response_plain, _elapsed_seconds) = _summarize_with_retry(prompt)
             elapsed_seconds += _elapsed_seconds
             rsp = {"short_summary": response_plain}
-        elif config.is_local_via_ollama():
+        elif util_config.is_local_via_ollama():
             if target_language is None:
                 prompt = prompts.get_ollama_summarize_prompt(text)
             else:
@@ -220,7 +220,7 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
             (rsp, _elapsed_seconds, _cost) = _summarize_with_retry(prompt)
             elapsed_seconds += _elapsed_seconds
             cost += _cost
-        elif config.is_openai():
+        elif util_config.is_openai():
             if target_language is None:
                 prompt = prompts.get_chatgpt_summarize_prompt(text)
             else:

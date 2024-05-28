@@ -6,9 +6,10 @@ import config
 import prompts
 import service_api_key
 import util_cost_estimator
+import util_config
 
 local_llm = None
-if config.is_local_via_ctransformers():
+if util_config.is_local_via_ctransformers():
     from ctransformers import AutoModelForCausalLM
 
     gpu_message = (
@@ -31,7 +32,7 @@ if config.is_local_via_ctransformers():
             config.LOCAL_CTRANSFORMERS_MODEL_FILE_PATH,
             model_type=config.LOCAL_CTRANSFORMERS_MODEL_TYPE,
         )
-elif config.is_local_via_ollama():
+elif util_config.is_local_via_ollama():
     print(f"ollama model: [{config.OLLAMA_MODEL_NAME}]")
 else:
     print(f"Open AI model: [{config.OPEN_AI_MODEL}]")
@@ -75,9 +76,9 @@ def get_completion_from_ollama(prompt):
 
 
 def get_completion(prompt):
-    if config.is_local_via_ctransformers():
+    if util_config.is_local_via_ctransformers():
         return (get_completion_from_local(prompt), 0.0)
-    elif config.is_local_via_ollama():
+    elif util_config.is_local_via_ollama():
         return (get_completion_from_ollama(prompt), 0.0)
     else:
         return get_completion_from_openai(prompt)

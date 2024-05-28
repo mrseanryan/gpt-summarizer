@@ -1,5 +1,5 @@
 import config
-
+import util_config
 
 def get_simple_summarize_prompt(input_text):
     return f"""
@@ -48,13 +48,13 @@ The output format must be valid JSON, with the fields: short_summary, long_summa
 
 
 def _get_output_format():
-    if config.is_json_not_yaml():
+    if util_config.is_json_not_yaml():
         return OUTPUT_FORMAT_JSON
     return OUTPUT_FORMAT_YAML
 
 
 def get_output_format_name():
-    if config.is_json_not_yaml():
+    if util_config.is_json_not_yaml():
         return "JSON"
     return "YAML"
 

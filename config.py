@@ -35,42 +35,6 @@ OPENAI_COST_CURRENCY = "$"
 OPENAI_COST__PER_PROMPT_ONE_MILLION_TOKENS__USD = 0.50
 OPENAI_COST__PER_COMPLETION_ONE_MILLION_TOKENS__USD = 1.50
 
-OLLAMA_MODEL_NAME = ""  # llama3 or phi3
+OLLAMA_MODEL_NAME = "llama3"  # llama3 or phi3
 
 SUPPORTED_FILE_EXTENSIONS = [".html", ".md", ".pdf", ".txt", ".yaml"]
-
-
-def _is_local_via_ctransformers():
-    return len(LOCAL_CTRANSFORMERS_MODEL_FILE_PATH) > 0
-
-
-def _is_local_via_ollama():
-    return len(OLLAMA_MODEL_NAME) > 0
-
-
-def is_local_via_ctransformers():
-    is_enabled = _is_local_via_ctransformers()
-    if is_enabled and _is_local_via_ollama():
-        raise ValueError(
-            "Please check config.py: both local via ctransformers AND ollama are enabled"
-        )
-    return is_enabled
-
-
-def is_local_via_ollama():
-    is_enabled = _is_local_via_ollama()
-    if is_enabled and _is_local_via_ctransformers():
-        raise ValueError(
-            "Please check config.py: both local via ctransformers AND ollama are enabled"
-        )
-    return is_enabled
-
-
-def is_openai():
-    return not _is_local_via_ctransformers() and not _is_local_via_ollama()
-
-
-def is_json_not_yaml():
-    if is_openai():
-        return False
-    return is_local__json_not_yaml
