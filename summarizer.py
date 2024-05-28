@@ -17,6 +17,7 @@ import prompts
 import util_chat
 import util_config
 
+
 def _clean_response(text):
     prelim_with_data_format = f"```{prompts.get_output_format_name().lower()}"
     if prelim_with_data_format in text:
@@ -292,7 +293,9 @@ def summarize_file_or_dir_or_url(
     if path_to_output_dir:
         util_dir.ensure_dir_exists(path_to_output_dir)
 
-    input_filepaths = extractor.collect_input_filepaths(path_to_input_file_or_dir_or_url)
+    input_filepaths = extractor.collect_input_filepaths(
+        path_to_input_file_or_dir_or_url
+    )
 
     files_processed = 0
     files_skipped = 0

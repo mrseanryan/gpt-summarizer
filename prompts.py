@@ -1,6 +1,7 @@
 import config
 import util_config
 
+
 def get_simple_summarize_prompt(input_text):
     return f"""
     Create a summary of this text:
