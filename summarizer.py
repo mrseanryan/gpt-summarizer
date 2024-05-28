@@ -9,10 +9,10 @@ from cornsnake import (
     util_time,
     util_wait,
     util_dir,
-    util_network,
 )
 
 import config
+import extractor
 import prompts
 import util_chat
 import util_config
@@ -286,42 +286,13 @@ def _print_final_result(files_processed, elapsed_seconds, files_skipped, cost):
         )
 
 
-def _download_file(url):
-    util_print.print_section(f"Downloading file")
-    util_print.print_custom(f"Downloading from {url} ...")
-
-    # add timestamp to make unique filename, since URL content may have changed
-    local_filepath = util_network.get_file_timestamped(
-        url,
-        "./temp",
-        prefix="downloaded-",
-        text_file_extensions=config.SUPPORTED_FILE_EXTENSIONS,
-    )
-    util_print.print_result(f"[download complete] {local_filepath}")
-    return local_filepath
-
-
-def _is_url(path):
-    return path.startswith("http")
-
-
 def summarize_file_or_dir_or_url(
     path_to_input_file_or_dir_or_url, path_to_output_dir, target_language
 ):
     if path_to_output_dir:
         util_dir.ensure_dir_exists(path_to_output_dir)
 
-    input_filepaths = []
-    if os.path.isdir(path_to_input_file_or_dir_or_url):
-        for extension in config.SUPPORTED_FILE_EXTENSIONS:
-            input_filepaths += util_dir.find_files_recursively(
-                path_to_input_file_or_dir_or_url, extension
-            )
-    elif _is_url(path_to_input_file_or_dir_or_url):
-        local_filepath = _download_file(path_to_input_file_or_dir_or_url)
-        input_filepaths = [local_filepath]
-    else:
-        input_filepaths = [path_to_input_file_or_dir_or_url]
+    input_filepaths = extractor.collect_input_filepaths(path_to_input_file_or_dir_or_url)
 
     files_processed = 0
     files_skipped = 0
