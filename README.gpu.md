@@ -25,4 +25,11 @@ pip3 install ctransformers --no-binary ctransformers # use --no-binary to force 
 
 You can tweak the settings in `config.py`.
 
-For more details, see the main tool [ctransformers](https://github.com/marella/ctransformers).
+# More details
+
+## local via ctransformers
+- [ctransformers](https://github.com/marella/ctransformers).
+
+## local via pytorch
+- [pytorch](https://pytorch.org/get-started/locally/)
+- [Building pytorch from scratch](https://github.com/pytorch/pytorch#from-source)
