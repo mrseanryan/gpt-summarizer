@@ -25,4 +25,4 @@ pip3 install ctransformers --no-binary ctransformers # use --no-binary to force 
 
 You can tweak the settings in `config.py`.
 
-For more details, see my [gpt-local](LOCAL_MODEL_FILE_PATH) wrapper project, or the main tool [ctransformers](https://github.com/marella/ctransformers).
+For more details, see the main tool [ctransformers](https://github.com/marella/ctransformers).
