@@ -181,11 +181,10 @@ def _convert_array_of_dict_to_array(a_list):
 
 
 def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir):
-    input_text = _extract_text(path_to_input_file)
-
-    input_text_chunks = _chunk_text_by_words(input_text)
-
     util_print.print_section(f"Summarizing '{path_to_input_file}'")
+
+    input_text = _extract_text(path_to_input_file)
+    input_text_chunks = _chunk_text_by_words(input_text)
 
     if target_language is None:
         print(f"Summarizing file at '{path_to_input_file}'...")
