@@ -103,12 +103,12 @@ def _write_output_file(
 
 def _chunk_text_by_words(input_text):
     input_words = input_text.split(" ")
-    input_tokens_count = len(input_words)
+    input_words_count = len(input_words)
     input_text_list = []
 
-    if input_tokens_count > config.MAIN_INPUT_WORDS:
+    if input_words_count > config.MAIN_INPUT_WORDS:
         util_print.print_warning(
-            f"The input file has many words! Max is {config.MAIN_INPUT_WORDS} but that file has {input_tokens_count} words. Will chunk the text."
+            f"The input file has many words! Max is {config.MAIN_INPUT_WORDS} but that file has {input_words_count} words. Will chunk the text."
         )
         chunks = _divide_into_chunks(input_words, config.MAIN_INPUT_WORDS)
         input_text_list = []
@@ -120,7 +120,7 @@ def _chunk_text_by_words(input_text):
     return input_text_list
 
 
-def _print_file_result(short_summary, long_summary, paragraphs, elapsed_seconds, cost):
+def _print_file_result(short_summary, long_summary, paragraphs, elapsed_seconds, cost, chunk_count, chunks_failed):
     util_print.print_section("FULL Short Summary")
     print(short_summary)
 
@@ -137,6 +137,8 @@ def _print_file_result(short_summary, long_summary, paragraphs, elapsed_seconds,
         util_print.print_important(
             f" -- THIS FILE estimated cost: {config.OPENAI_COST_CURRENCY}{cost}"
         )
+    if chunks_failed > 0:
+        util_print.print_warning(f"{chunks_failed} of {chunk_count} document chunks were skipped. If the summary is not of high quality, you can re-run with smaller chunks, by reducing MAIN_INPUT_WORDS in config.py.")
 
 
 def _extract_text(path_to_input_file):
@@ -197,6 +199,7 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
     elapsed_seconds = 0
     cost = 0.0
 
+    chunks_failed = 0
     chunk_count = 1
     for text in input_text_chunks:
         prompt = ""
@@ -238,7 +241,9 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
         util_print.print_section(
             f"Short Summary = Chunk {chunk_count} of {len(input_text_chunks)}"
         )
-        if rsp is not None:
+        if rsp is None:
+            chunks_failed += 1
+        else:
             if isinstance(rsp, str):
                 util_print.print_warning("Response is string - expected dict")
                 print(rsp)
@@ -254,7 +259,7 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
 
         chunk_count += 1
 
-    _print_file_result(short_summary, long_summary, paragraphs, elapsed_seconds, cost)
+    _print_file_result(short_summary, long_summary, paragraphs, elapsed_seconds, cost, len(input_text_chunks), chunks_failed)
 
     path_to_output_file = _get_path_to_output_file(
         path_to_input_file, path_to_output_dir

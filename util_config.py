@@ -33,5 +33,5 @@ def is_openai():
 
 def is_json_not_yaml():
     if is_openai():
-        return False
+        return False  # cheaper
     return config.is_local__json_not_yaml
