@@ -171,6 +171,12 @@ ollama serve
 Edit config.py - set `OLLAMA_MODEL_NAME` to the name of the model from step 2
 Set the value of `LOCAL_CTRANSFORMERS_MODEL_FILE_PATH` to be "".
 
+5. Install python libraries
+
+```
+pip install cornsnake==0.0.60 html2text==2024.2.26 json5==0.9.25 ollama==0.2.0 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5
+```
+
 #### Tip: if you find there are many retries when parsing the LLM output, then try switching between JSON and YAML.
 
 YAML is generally cheaper and faster, but some LLMs may be more reliable if asked to output JSON.
