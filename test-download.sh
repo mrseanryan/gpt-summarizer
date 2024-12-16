@@ -9,7 +9,7 @@ URL=https://raw.githubusercontent.com/mrseanryan/gpt-summarizer/master/README.md
 function test_with_outdir()
 {
     mkdir -p $outdir
-    python3 main_cli.py $URL  -o $outdir $1 $2 $3 $4
+    poetry run python -m gpt-summarizer.main_cli $URL  -o $outdir $1 $2 $3 $4
 
     ls -al $outdir
 }

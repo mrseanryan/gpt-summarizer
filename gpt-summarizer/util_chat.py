@@ -2,11 +2,11 @@ import ollama
 import openai
 
 from cornsnake import util_color, util_print, util_time
-import config
-import prompts
-import service_api_key
-import util_cost_estimator
-import util_config
+from . import config
+from . import prompts
+from . import service_api_key
+from . import util_cost_estimator
+from . import util_config
 
 local_llm = None
 if util_config.is_local_via_ctransformers():

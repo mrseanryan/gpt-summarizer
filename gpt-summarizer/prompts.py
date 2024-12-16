@@ -1,5 +1,5 @@
-import config
-import util_config
+from . import config
+from . import util_config
 
 
 def get_simple_summarize_prompt(input_text):

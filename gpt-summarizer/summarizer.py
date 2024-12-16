@@ -11,11 +11,11 @@ from cornsnake import (
     util_dir,
 )
 
-import config
-import extractor
-import prompts
-import util_chat
-import util_config
+from . import config
+from . import extractor
+from . import prompts
+from . import util_chat
+from . import util_config
 
 
 def _clean_response(text):

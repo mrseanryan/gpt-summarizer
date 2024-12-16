@@ -1,4 +1,4 @@
-import config
+from . import config
 import os
 
 from cornsnake import util_dir, util_print, util_network

@@ -1,4 +1,4 @@
-import config
+from . import config
 
 ONE_MILLION = 1000000
 

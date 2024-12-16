@@ -1,4 +1,4 @@
-import config
+from . import config
 
 
 def _is_local_via_ctransformers():

@@ -37,7 +37,7 @@ To see the available options:
 or
 
 ```
-python3 main_cli.py
+poetry run python -m gpt-summarizer.main_cli
 ```
 
 Output:
@@ -63,13 +63,14 @@ Tip: unless using a local LLM, make sure the text does not contain commercially 
 
 To summarize different file(s):
 
-`python3 main_cli.py <path to input text file or directory> [options]`
+`
+poetry run python -m gpt-summarizer.main_cli <path to input text file or directory> [options]`
 
 ### Alternate Usage - a PDF file
 
 **gpt-summarizer** can also summarize PDF files:
 
-`python3 main_cli.py <path to PDF file or directory> [options]`
+`poetry run python -m gpt-summarizer.main_cli <path to PDF file or directory> [options]`
 
 ## Example Output
 
@@ -124,7 +125,13 @@ First, edit config.py according to whether you can use GPU acceleration:
 1. Install openai Python client.
 
 ```
-pip install cornsnake==0.0.60 html2text==2024.2.26 json5==0.9.25 ollama==0.2.0 openai==1.23.6 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5
+poetry install
+```
+
+OR
+
+```
+pip install cornsnake~=0.0.60 html2text==2024.2.26 json5==0.9.25 ollama==0.2.0 openai==1.23.6 pydantic~=2.7.3 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5
 ```
 
 2. Get an Open AI key
@@ -174,7 +181,13 @@ Set the value of `LOCAL_CTRANSFORMERS_MODEL_FILE_PATH` to be "".
 5. Install python libraries
 
 ```
-pip install cornsnake==0.0.60 html2text==2024.2.26 json5==0.9.25 ollama==0.2.0 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5
+poetry install
+```
+
+OR
+
+```
+pip install cornsnake~=0.0.60 html2text==2024.2.26 json5==0.9.25 ollama==0.2.0 PyMuPDF==1.24.1 pyyaml==6.0.1 ruff==0.3.5
 ```
 
 #### Tip: if you find there are many retries when parsing the LLM output, then try switching between JSON and YAML.

@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "gpt-summarizer"
+version = "0.1.0"
+description = "Summarize text using ChatGPT or a local LLM, with support for multiple large text files, PDF files and translation."
+authors = ["Sean Ryan <mr.sean.ryan@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = ["nlp", "pdf", "summarization", "chatgpt", "pdf-summarizer"]
+homepage = "https://github.com/mrseanryan/mrseanryan/gpt-summarizer"
+repository = "https://github.com/mrseanryan/mrseanryan/gpt-summarizer"
+documentation = "https://github.com/mrseanryan/mrseanryan/gpt-summarizer"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+cornsnake = "^0.0.67"
+ruff = "0.3.5"
+openai = "1.23.6"
+html2text = "2024.2.26"
+json5 = "0.9.25"
+ollama = "0.2.0"
+pydantic = ">=2.7.3,<2.8.0"
+pymupdf = "1.24.1"
+pyyaml = "6.0.1"
+
+[tool.poetry.group.test.dependencies]
+parameterized = "~=0.9.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff.format]
+exclude = []

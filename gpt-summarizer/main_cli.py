@@ -15,9 +15,9 @@ The options are:
 import sys
 from optparse import OptionParser
 
-import summarizer
+from . import summarizer
 
-import config
+from . import config
 
 
 # usage() - prints out the usage text, from the top of this file :-)
