@@ -21,8 +21,9 @@ from . import config
 
 
 # usage() - prints out the usage text, from the top of this file :-)
-def usage():
+def usage(parser):
     print(__doc__)
+    parser.print_help()
 
 
 # optparse - parse the args
@@ -46,7 +47,7 @@ parser.add_option(
 
 (options, args) = parser.parse_args()
 if len(args) != 1:
-    usage()
+    usage(parser)
     sys.exit(2)
 
 path_to_input_file_or_dir_or_url = sys.argv[1]

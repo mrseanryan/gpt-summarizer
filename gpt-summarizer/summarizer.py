@@ -2,6 +2,7 @@ import os
 import html2text
 import json5
 import yaml
+from collections import OrderedDict
 
 from cornsnake import (
     util_print,
@@ -87,15 +88,18 @@ def _get_path_to_output_file(path_to_input_file, path_to_output_dir):
 
 
 def _write_output_file(
-    short_summary, long_summary, paragraphs, elapsed_seconds, cost, path_to_output_file
+    title, short_summary, long_summary, paragraphs, elapsed_seconds, cost, path_to_output_file
 ):
-    file_result = {}
+    file_result = OrderedDict()
+    file_result["title"] = title
     file_result["short_summary"] = short_summary
     file_result["long_summary"] = long_summary
     file_result["paragraphs"] = paragraphs
     file_result["total_time_seconds"] = elapsed_seconds
     file_result["total_estimated_cost_currency"] = config.OPENAI_COST_CURRENCY
     file_result["total_estimated_cost"] = cost
+
+    yaml.add_representer(OrderedDict, lambda dumper, data: dumper.represent_mapping('tag:yaml.org,2002:map', data.items()))
     yaml_text = yaml.dump(file_result)
     util_print.print_important(f"Writing YAML file to {path_to_output_file}")
     util_file.write_text_to_file(yaml_text, path_to_output_file)
@@ -120,7 +124,9 @@ def _chunk_text_by_words(input_text):
     return input_text_list
 
 
-def _print_file_result(short_summary, long_summary, paragraphs, elapsed_seconds, cost, chunk_count, chunks_failed):
+def _print_file_result(title, short_summary, long_summary, paragraphs, elapsed_seconds, cost, chunk_count, chunks_failed):
+    util_print.print_section(f"TITLE: {title}")
+
     util_print.print_section("FULL Short Summary")
     print(short_summary)
 
@@ -193,6 +199,7 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
     else:
         print(f"Summarizing file at '{path_to_input_file}' into {target_language}...")
 
+    title = ""
     short_summary = ""
     long_summary = ""
     paragraphs = []
@@ -249,6 +256,12 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
                 print(rsp)
                 short_summary += rsp + "\n"
             else:
+                if "title_in_quotes" in rsp:
+                    print(rsp["title_in_quotes"])
+                    if not title:
+                        title = rsp["title_in_quotes"]
+                        if not isinstance(title, str):
+                            title = _convert_array_to_str(title)
                 if "short_summary" in rsp:
                     print(rsp["short_summary"])
                     short_summary += _convert_array_to_str(rsp["short_summary"]) + "\n"
@@ -259,7 +272,7 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
 
         chunk_count += 1
 
-    _print_file_result(short_summary, long_summary, paragraphs, elapsed_seconds, cost, len(input_text_chunks), chunks_failed)
+    _print_file_result(title, short_summary, long_summary, paragraphs, elapsed_seconds, cost, len(input_text_chunks), chunks_failed)
 
     path_to_output_file = _get_path_to_output_file(
         path_to_input_file, path_to_output_dir
@@ -267,6 +280,7 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
 
     if path_to_output_file:
         _write_output_file(
+            title,
             short_summary,
             long_summary,
             paragraphs,

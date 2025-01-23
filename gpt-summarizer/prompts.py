@@ -36,7 +36,7 @@ def get_ollama_summary_prompt_and_translate_to(input_text, target_language):
 
 # yaml is cheaper to generate
 OUTPUT_FORMAT_YAML = f"""
-The output format must be valid YAML, with the fields: short_summary, long_summary, paragraphs.
+The output format must be valid YAML, with the fields: title_in_quotes, short_summary, long_summary, paragraphs.
 - do NOT include YAML special characters in the text (for example: single quotes or colons)
 - do NOT use the line-continuation operator '|'
 - for bullets use hyphen '-', do NOT use '*'
@@ -44,7 +44,7 @@ The output format must be valid YAML, with the fields: short_summary, long_summa
 """
 
 OUTPUT_FORMAT_JSON = f"""
-The output format must be valid JSON, with the fields: short_summary, long_summary, paragraphs.
+The output format must be valid JSON, with the fields: title_in_quotes, short_summary, long_summary, paragraphs.
 """
 
 
@@ -70,7 +70,7 @@ def build_next_prompt(input_text, target_language):
         1. Analyze the given input text.
           - The input text is delimited by triple backticks.
         2. {_get_output_format()}
-        3. Create a short and long summary in the target language {target_language}.
+        3. Create a title and a short and long summary in the target language {target_language}.
           - {OUTPUT_TEXT_STYLE}
           - short_summary should be {config.SHORT_SUMMARY_WORD_COUNT} words long.
           - long_summary should be {config.LONG_SUMMARY_WORD_COUNT} words long.
