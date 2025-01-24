@@ -110,7 +110,8 @@ def _write_output_file(
         {
             "tool_name": "gpt-summarizer",
             "tool_version": util_version.VERSION,
-            "llm": util_config.llm_model()
+            "llm": util_config.get_llm_model(),
+            "platform": util_config.get_platform()
         }
     )
     file_result["tool_info"] = tool_info
