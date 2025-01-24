@@ -197,7 +197,7 @@ def _print_file_result(
     util_print.print_result(
         f" -- THIS FILE time: {util_time.describe_elapsed_seconds(elapsed_seconds)}"
     )
-    if cost > 0:
+    if cost > 0.0:
         util_print.print_important(
             f" -- THIS FILE estimated cost: {config.OPENAI_COST_CURRENCY}{cost}"
         )
@@ -249,6 +249,8 @@ def _convert_array_of_dict_to_array(a_list: str | dict | list) -> list[str]:
         return [a_list]
     return a_list
 
+def _round_cost(cost: float) -> float:
+    return round(cost, config.OPENAI_COST__DECIMALS)
 
 def _summarize_one_file(
     path_to_input_file: str,
@@ -350,16 +352,17 @@ def _summarize_one_file(
     short_summary = short_summary.strip()
     long_summary = long_summary.strip()
     paragraphs = [p.strip() for p in paragraphs]
+    cost = _round_cost(cost)
 
     _print_file_result(
-        title,
-        short_summary,
-        long_summary,
-        paragraphs,
-        elapsed_seconds,
-        cost,
-        len(input_text_chunks),
-        chunks_failed,
+        title=title,
+        short_summary=short_summary,
+        long_summary=long_summary,
+        paragraphs=paragraphs,
+        elapsed_seconds=elapsed_seconds,
+        cost=cost,
+        chunk_count=len(input_text_chunks),
+        chunks_failed=chunks_failed,
     )
 
     path_to_output_file = _get_path_to_output_file(
@@ -436,4 +439,5 @@ def summarize_file_or_dir_or_url(
         files_processed += 1
 
     elapsed_seconds = round(elapsed_seconds, 2)
+    cost = _round_cost(cost)
     _print_final_result(files_processed, elapsed_seconds, files_skipped, cost)
