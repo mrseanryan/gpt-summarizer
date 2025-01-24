@@ -49,7 +49,6 @@ def get_platform() -> str:
         return "Ollama (local)"
     elif is_openai():
         return "OpenAI"
-        return config.OPEN_AI_MODEL
     elif is_local_via_ctransformers():
         return "ctransformers (local)"
     else:
