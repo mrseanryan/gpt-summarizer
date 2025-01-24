@@ -249,8 +249,10 @@ def _convert_array_of_dict_to_array(a_list: str | dict | list) -> list[str]:
         return [a_list]
     return a_list
 
+
 def _round_cost(cost: float) -> float:
     return round(cost, config.OPENAI_COST__DECIMALS)
+
 
 def _summarize_one_file(
     path_to_input_file: str,
