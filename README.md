@@ -2,6 +2,8 @@
 
 Summarize text using ChatGPT or a local LLM, with support for multiple large text files, PDF files and translation.
 
+- can read from a file, a directory (summarizing multiple files) or else a URL (downloading and summarizing)
+- can translate to another language (defaults to English)
 - outputs in YAML format, with title, short and long summaries, paragraph summaries and metadata.
 
 ## Features
@@ -22,7 +24,7 @@ Summarize text using ChatGPT or a local LLM, with support for multiple large tex
 
 If running a local LLM:
 
-- ctransformers
+- ollama [recommended] (or else ctransformers)
 
 If using Open AI Chat GPT:
 
@@ -212,8 +214,10 @@ ollama serve
 
 4. Configure gpt-summarizer to use ollama
 
-Edit config.py - set `OLLAMA_MODEL_NAME` to the name of the model from step 2
-Set the value of `LOCAL_CTRANSFORMERS_MODEL_FILE_PATH` to be "".
+Edit config.py
+
+- set `OLLAMA_MODEL_NAME` to the name of the model from step 2
+- Set the value of `LOCAL_CTRANSFORMERS_MODEL_FILE_PATH` to be "".
 
 5. Install python libraries
 
