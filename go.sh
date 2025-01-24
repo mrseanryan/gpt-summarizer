@@ -1,1 +1,1 @@
-poetry run python -m gpt-summarizer.main_cli "$@"
+poetry run python -m gpt_summarizer.main_cli "$@"

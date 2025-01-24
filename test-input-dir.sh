@@ -7,7 +7,7 @@ fi
 function test_with_outdir()
 {
     mkdir -p $outdir
-    poetry run python -m gpt-summarizer.main_cli ./data/small_input  -o $outdir $1 $2 $3 $4
+    poetry run python -m gpt_summarizer.main_cli ./data/small_input  -o $outdir $1 $2 $3 $4
 
     ls -al $outdir
 }

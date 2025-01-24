@@ -12,7 +12,7 @@ is_debug = False
 is_local__json_not_yaml = True  # YAML is generally cheaper and faster, but some LLMs may be more reliable with JSON
 
 # 0 would be same each time. 0.7 or 1 would be different each time, and less likely words can be used:
-TEMPERATURE = 0
+TEMPERATURE = 0.0
 
 OPEN_AI_MODEL = "gpt-3.5-turbo"
 

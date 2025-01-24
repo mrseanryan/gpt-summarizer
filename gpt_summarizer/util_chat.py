@@ -1,5 +1,8 @@
+from typing import Callable, Tuple
 import ollama
 import openai
+
+from openai.types.chat import ChatCompletionMessageParam, completion_create_params
 
 from cornsnake import util_color, util_print, util_time
 from . import config
@@ -8,7 +11,7 @@ from . import service_api_key
 from . import util_cost_estimator
 from . import util_config
 
-local_llm = None
+local_llm: Callable[..., str | None] | None = None
 if util_config.is_local_via_ctransformers():
     from ctransformers import AutoModelForCausalLM
 
@@ -43,15 +46,17 @@ else:
     openai.api_key = service_api_key.get_openai_key()
 
 
-def get_completion_from_openai(prompt):
-    messages = [
-        {"role": "system", "content": prompts.SYSTEM_PROMPT__OPENAI},
+def get_completion_from_openai(prompt: str) -> Tuple[str | None, float]:
+    messages: list[ChatCompletionMessageParam] = [
+        {"role": "system", "content": str(prompts.SYSTEM_PROMPT__OPENAI)},
         {"role": "user", "content": prompt},
     ]
 
     client = openai.OpenAI()
 
-    response_format = None
+    response_format: completion_create_params.ResponseFormat | openai.NotGiven = (
+        openai.NotGiven()
+    )
     if util_config.is_json_not_yaml():
         response_format = {"type": "json_object"}
 
@@ -64,27 +69,31 @@ def get_completion_from_openai(prompt):
         response_format=response_format,
     )
 
-    estimated_cost = util_cost_estimator.estimate_openai_cost(
-        response.usage.prompt_tokens, response.usage.completion_tokens
-    )
+    estimated_cost = 0.0
+    if response.usage:
+        estimated_cost = util_cost_estimator.estimate_openai_cost(
+            response.usage.prompt_tokens, response.usage.completion_tokens
+        )
 
     return (response.choices[0].message.content, estimated_cost)
 
 
-def get_completion_from_local(prompt):
+def get_completion_from_local(prompt: str) -> str | None:
+    if not local_llm:
+        raise RuntimeError("local_llm is not set!")
     return local_llm(prompt)
 
 
-def get_completion_from_ollama(prompt):
+def get_completion_from_ollama(prompt: str) -> str | None:
     messages = [
         {"role": "system", "content": prompts.SYSTEM_PROMPT__OPENAI},
         {"role": "user", "content": prompt},
     ]
     response = ollama.chat(model=config.OLLAMA_MODEL_NAME, messages=messages)
-    return response["message"]["content"]
+    return str(response["message"]["content"])
 
 
-def get_completion(prompt):
+def get_completion(prompt: str) -> Tuple[str | None, float]:
     if util_config.is_local_via_ctransformers():
         return (get_completion_from_local(prompt), 0.0)
     elif util_config.is_local_via_ollama():
@@ -93,7 +102,9 @@ def get_completion(prompt):
         return get_completion_from_openai(prompt)
 
 
-def send_prompt(prompt, show_input=True, show_output=True):
+def send_prompt(
+    prompt: str, show_input: bool = True, show_output: bool = True
+) -> Tuple[str | None, float]:
     if show_input:
         util_print.print_section("=== REQUEST ===")
         print(prompt)
@@ -107,7 +118,7 @@ def send_prompt(prompt, show_input=True, show_output=True):
     return (response, cost)
 
 
-def next_prompt(prompt):
+def next_prompt(prompt: str) -> Tuple[str | None, float, float]:
     start = util_time.start_timer()
     rsp = None
     if config.is_debug:

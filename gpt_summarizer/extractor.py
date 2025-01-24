@@ -4,12 +4,12 @@ import os
 from cornsnake import util_dir, util_print, util_network
 
 
-def _download_file(url):
-    util_print.print_section(f"Downloading file")
+def _download_file(url: str) -> str:
+    util_print.print_section("Downloading file")
     util_print.print_custom(f"Downloading from {url} ...")
 
     # add timestamp to make unique filename, since URL content may have changed
-    local_filepath = util_network.get_file_timestamped(
+    local_filepath: str = util_network.get_file_timestamped(
         url,
         "./temp",
         prefix="downloaded-",
@@ -19,11 +19,11 @@ def _download_file(url):
     return local_filepath
 
 
-def _is_url(path):
+def _is_url(path: str) -> bool:
     return path.startswith("http")
 
 
-def collect_input_filepaths(path_to_input_file_or_dir_or_url):
+def collect_input_filepaths(path_to_input_file_or_dir_or_url: str) -> list[str]:
     input_filepaths = []
     if os.path.isdir(path_to_input_file_or_dir_or_url):
         for extension in config.SUPPORTED_FILE_EXTENSIONS:

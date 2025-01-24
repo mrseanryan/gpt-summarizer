@@ -1,12 +1,12 @@
 import datetime
 import os
+from typing import Any, Generator, Tuple
 import html2text
 import json5
 import yaml
 from collections import OrderedDict
 
 from cornsnake import (
-    util_date,
     util_print,
     util_file,
     util_time,
@@ -22,7 +22,10 @@ from . import util_config
 from . import util_version
 
 
-def _clean_response(text):
+def _clean_response(text: str | None) -> str:
+    if not text:
+        return ""
+
     prelim_with_data_format = f"```{prompts.get_output_format_name().lower()}"
     if prelim_with_data_format in text:
         text = text.split(prelim_with_data_format)[1]
@@ -40,10 +43,15 @@ def _clean_response(text):
     return text
 
 
-def _summarize_with_retry(prompt):
+RSP_AND_METADATA = Tuple[
+    dict[str, Any] | None, float, float
+]  # (rsp_parsed, elapsed_seconds, total_cost)
+
+
+def _summarize_with_retry(prompt: str) -> RSP_AND_METADATA:
     retries_remaining = config.RETRY_COUNT
     rsp_parsed = None
-    elapsed_seconds = 0
+    elapsed_seconds = 0.0
     total_cost = 0.0
     while not rsp_parsed and retries_remaining > 0:
         rsp = None
@@ -70,16 +78,18 @@ def _summarize_with_retry(prompt):
                 util_print.print_warning("Retrying...")
 
     if rsp_parsed is None:
-        util_print.print_error(f"!!! RETRIES EXPIRED !!!")
+        util_print.print_error("!!! RETRIES EXPIRED !!!")
     return (rsp_parsed, elapsed_seconds, total_cost)
 
 
-def _divide_into_chunks(list, size):
+def _divide_into_chunks(list: list[str], size: int) -> Generator[list[str], None, None]:
     for i in range(0, len(list), size):
         yield list[i : i + size]
 
 
-def _get_path_to_output_file(path_to_input_file: str, path_to_output_dir: str | None):
+def _get_path_to_output_file(
+    path_to_input_file: str, path_to_output_dir: str | None
+) -> str | None:
     if not path_to_output_dir:
         return None
     input_filename = util_file.get_last_part_of_path(path_to_input_file)
@@ -99,9 +109,10 @@ def _write_output_file(
     cost: float,
     path_to_output_file: str,
     path_to_source: str,
+    original_path_to_input_file_or_dir_or_url: str,
     target_language: str | None,
-):
-    file_result = OrderedDict()
+) -> None:
+    file_result = OrderedDict[str, str | list[str] | OrderedDict[str, Any]]()
     file_result["title"] = title
     file_result["short_summary"] = short_summary
     file_result["long_summary"] = long_summary
@@ -128,7 +139,9 @@ def _write_output_file(
 
     file_result["summary_date"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     file_result["source_path"] = path_to_source
-    file_result["target_language"] = target_language
+    file_result["original_source_path"] = original_path_to_input_file_or_dir_or_url
+    if target_language:
+        file_result["target_language"] = target_language
 
     yaml.add_representer(
         OrderedDict,
@@ -141,10 +154,10 @@ def _write_output_file(
     util_file.write_text_to_file(yaml_text, path_to_output_file)
 
 
-def _chunk_text_by_words(input_text):
+def _chunk_text_by_words(input_text: str) -> list[str]:
     input_words = input_text.split(" ")
     input_words_count = len(input_words)
-    input_text_list = []
+    input_text_list: list[str] = []
 
     if input_words_count > config.MAIN_INPUT_WORDS:
         util_print.print_warning(
@@ -161,15 +174,15 @@ def _chunk_text_by_words(input_text):
 
 
 def _print_file_result(
-    title,
-    short_summary,
-    long_summary,
-    paragraphs,
-    elapsed_seconds,
-    cost,
-    chunk_count,
-    chunks_failed,
-):
+    title: str,
+    short_summary: str,
+    long_summary: str,
+    paragraphs: list[str],
+    elapsed_seconds: float,
+    cost: float,
+    chunk_count: int,
+    chunks_failed: int,
+) -> None:
     util_print.print_section(f"TITLE: {title}")
 
     util_print.print_section("FULL Short Summary")
@@ -194,8 +207,8 @@ def _print_file_result(
         )
 
 
-def _extract_text(path_to_input_file):
-    input_text = util_file.read_text_from_text_or_pdf_file_skipping_comments(
+def _extract_text(path_to_input_file: str) -> str:
+    input_text: str = util_file.read_text_from_text_or_pdf_file_skipping_comments(
         path_to_input_file
     )
     if path_to_input_file.endswith(".html"):
@@ -204,7 +217,7 @@ def _extract_text(path_to_input_file):
     return input_text
 
 
-def _convert_array_to_str(a):
+def _convert_array_to_str(a: str | dict | list) -> str:
     """
     Occasionally LLM can return a dict where str was expected
     """
@@ -219,7 +232,7 @@ def _convert_array_to_str(a):
     return a
 
 
-def _convert_array_of_dict_to_array(a_list):
+def _convert_array_of_dict_to_array(a_list: str | dict | list) -> list[str]:
     if isinstance(a_list, list):
         new_list = []
         for a1 in a_list:
@@ -230,14 +243,19 @@ def _convert_array_of_dict_to_array(a_list):
             else:
                 new_list.append(a1)
         return new_list
-    elif isinstance(a1, dict):
-        return yaml.dump(a1)
+    elif isinstance(a_list, dict):
+        return [yaml.dump(a_list)]
+    elif isinstance(a_list, str):
+        return [a_list]
     return a_list
 
 
 def _summarize_one_file(
-    path_to_input_file: str, target_language: str | None, path_to_output_dir: str | None
-):
+    path_to_input_file: str,
+    target_language: str | None,
+    path_to_output_dir: str | None,
+    original_path_to_input_file_or_dir_or_url: str,
+) -> Tuple[float, float]:  # (elapsed_seconds, cost)
     util_print.print_section(f"Summarizing '{path_to_input_file}'")
 
     input_text = _extract_text(path_to_input_file)
@@ -251,22 +269,25 @@ def _summarize_one_file(
     title = ""
     short_summary = ""
     long_summary = ""
-    paragraphs = []
-    elapsed_seconds = 0
+    paragraphs: list[str] = []
+    elapsed_seconds = 0.0
     cost = 0.0
 
     chunks_failed = 0
     chunk_count = 1
     for text in input_text_chunks:
         prompt = ""
+        rsp: dict[str, Any] | None = None
         if util_config.is_local_via_ctransformers():
             # TODO try fix
             if target_language is not None:
-                raise (f"target_language is only supported when using Open AI ChatGPT")
+                raise RuntimeError(
+                    "target_language is only supported when using Open AI ChatGPT"
+                )
             prompt = prompts.get_simple_summarize_prompt(text)
             if config.LOCAL_CTRANSFORMERS_MODEL_TYPE == "llama":
                 prompt = prompts.get_llama_summarize_prompt(text)
-            (response_plain, _elapsed_seconds) = _summarize_with_retry(prompt)
+            (response_plain, _elapsed_seconds, _cost) = _summarize_with_retry(prompt)
             elapsed_seconds += _elapsed_seconds
             rsp = {"short_summary": response_plain}
         elif util_config.is_local_via_ollama():
@@ -305,19 +326,24 @@ def _summarize_one_file(
                 print(rsp)
                 short_summary += rsp + "\n"
             else:
-                if "title_in_quotes" in rsp:
-                    print(rsp["title_in_quotes"])
+                rsp_title_in_quotes = rsp.get("title_in_quotes", None)
+                if rsp_title_in_quotes:
+                    print(rsp_title_in_quotes)
                     if not title:
-                        title = rsp["title_in_quotes"]
-                        if not isinstance(title, str):
-                            title = _convert_array_to_str(title)
-                if "short_summary" in rsp:
-                    print(rsp["short_summary"])
-                    short_summary += _convert_array_to_str(rsp["short_summary"]) + "\n"
-                if "long_summary" in rsp:
-                    long_summary += _convert_array_to_str(rsp["long_summary"]) + "\n"
-                if "paragraphs" in rsp:
-                    paragraphs += _convert_array_of_dict_to_array(rsp["paragraphs"])
+                        if not isinstance(rsp_title_in_quotes, str):
+                            title = _convert_array_to_str(rsp_title_in_quotes)
+                        else:
+                            title = rsp_title_in_quotes
+                rsp_short_summary = rsp.get("short_summary", None)
+                if rsp_short_summary:
+                    print(rsp_short_summary)
+                    short_summary += _convert_array_to_str(rsp_short_summary) + "\n"
+                rsp_long_summary = rsp.get("long_summary", None)
+                if rsp_long_summary:
+                    long_summary += _convert_array_to_str(rsp_long_summary) + "\n"
+                rsp_paragraphs = rsp.get("paragraphs", None)
+                if rsp_paragraphs:
+                    paragraphs += _convert_array_of_dict_to_array(rsp_paragraphs)
 
         chunk_count += 1
 
@@ -350,13 +376,16 @@ def _summarize_one_file(
             cost=cost,
             path_to_output_file=path_to_output_file,
             path_to_source=path_to_input_file,
+            original_path_to_input_file_or_dir_or_url=original_path_to_input_file_or_dir_or_url,
             target_language=target_language,
         )
 
     return (elapsed_seconds, cost)
 
 
-def _print_final_result(files_processed, elapsed_seconds, files_skipped, cost):
+def _print_final_result(
+    files_processed: int, elapsed_seconds: float, files_skipped: int, cost: float
+) -> None:
     util_print.print_section("Completed")
     util_print.print_result(
         f"{files_processed} files processed in {util_time.describe_elapsed_seconds(elapsed_seconds)}"
@@ -370,8 +399,10 @@ def _print_final_result(files_processed, elapsed_seconds, files_skipped, cost):
 
 
 def summarize_file_or_dir_or_url(
-    path_to_input_file_or_dir_or_url, path_to_output_dir, target_language
-):
+    path_to_input_file_or_dir_or_url: str,
+    path_to_output_dir: str | None,
+    target_language: str | None,
+) -> None:
     if path_to_output_dir:
         util_dir.ensure_dir_exists(path_to_output_dir)
 
@@ -381,8 +412,8 @@ def summarize_file_or_dir_or_url(
 
     files_processed = 0
     files_skipped = 0
-    elapsed_seconds = 0
-    cost = 0
+    elapsed_seconds = 0.0
+    cost = 0.0
     for path_to_input_file in input_filepaths:
         path_to_output_file = _get_path_to_output_file(
             path_to_input_file, path_to_output_dir
@@ -395,10 +426,14 @@ def summarize_file_or_dir_or_url(
             continue
 
         (_elapsed_seconds, _cost) = _summarize_one_file(
-            path_to_input_file, target_language, path_to_output_dir
+            path_to_input_file=path_to_input_file,
+            target_language=target_language,
+            path_to_output_dir=path_to_output_dir,
+            original_path_to_input_file_or_dir_or_url=path_to_input_file_or_dir_or_url,
         )
         elapsed_seconds += _elapsed_seconds
         cost += _cost
         files_processed += 1
 
+    elapsed_seconds = round(elapsed_seconds, 2)
     _print_final_result(files_processed, elapsed_seconds, files_skipped, cost)

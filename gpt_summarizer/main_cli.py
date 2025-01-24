@@ -14,7 +14,7 @@ from . import util_version
 
 
 # usage() - prints out the usage text, from the top of this file :-)
-def usage(parser):
+def usage(parser: OptionParser) -> None:
     print(__doc__)
     parser.print_help()
 

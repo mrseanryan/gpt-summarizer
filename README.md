@@ -39,7 +39,7 @@ To see the available options:
 or
 
 ```
-poetry run python -m gpt-summarizer.main_cli
+poetry run python -m gpt_summarizer.main_cli
 ```
 
 Output:
@@ -66,13 +66,13 @@ Tip: unless using a local LLM, make sure the text does not contain commercially 
 To summarize different file(s):
 
 `
-poetry run python -m gpt-summarizer.main_cli <path to input text file or directory> [options]`
+poetry run python -m gpt_summarizer.main_cli <path to input text file or directory> [options]`
 
 ### Alternate Usage - a PDF file
 
 **gpt-summarizer** can also summarize PDF files:
 
-`poetry run python -m gpt-summarizer.main_cli <path to PDF file or directory> [options]`
+`poetry run python -m gpt_summarizer.main_cli <path to PDF file or directory> [options]`
 
 ## Example Output
 
