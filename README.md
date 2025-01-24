@@ -2,6 +2,8 @@
 
 Summarize text using ChatGPT or a local LLM, with support for multiple large text files, PDF files and translation.
 
+- outputs in YAML format, with title, short and long summaries, paragraph summaries and metadata.
+
 ## Features
 
 | Area                 | Feature                                                                                                                                                                                                                                                     |
@@ -76,7 +78,7 @@ poetry run python -m gpt-summarizer.main_cli <path to input text file or directo
 
 The output is printed to STDOUT (terminal output):
 
-```
+```bash
 === === ===     [1] Summarizing './data/input.txt'      === === ===
 Summarizing file at './data/input.txt' into English...
 === === ===     [2] Short Summary = Chunk 1 of 1        === === ===
@@ -98,6 +100,41 @@ The study offers insights into how language models utilize input context and sug
 === === ===     [6] Completed   === === ===
 1 files processed in 0:00:05s
  -- Total estimated cost: $0.0006715
+```
+
+The output is a YAML file, with a structure like this (abbreviated) example:
+
+```yaml
+title: 'Lost in the Middle: How Language Models Use Long Contexts'
+short_summary: 'Recent language models'' performance in utilizing long contexts is
+  analyzed, revealing challenges when accessing information in the middle. The study
+  provides insights for future long-context models.
+  ...
+  '
+long_summary: 'The study delves into how language models handle long contexts, showing
+  that performance peaks when relevant information is at the beginning or end, but
+  drops significantly in the middle. It explores the impact of context length on model
+  performance and the challenges faced by models in accessing information. The research
+  offers new evaluation protocols for upcoming long-context models.
+  ...
+
+  '
+paragraphs:
+- Recent language models face challenges in utilizing long contexts effectively.
+- Performance peaks when relevant information is at the beginning or end of the input
+  context.
+  ...
+run_info:
+  total_time_seconds: 43.19290280342102
+  total_estimated_cost_currency: $
+  total_estimated_cost: 0.014135000000000002
+tool_info:
+  tool_name: gpt-summarizer
+  tool_version: 1.2.0
+  llm: gpt-3.5-turbo
+summary_date: '2025-01-24 17:37:32'
+source_path: ./temp\downloaded--How-Language-Models-use-Long-Contexts.2025_01_24__173648.pdf
+target_language: English
 ```
 
 See also an example of [summarizing this README](./example_output/downloaded--README.2024_05_24__150934.yaml.txt).

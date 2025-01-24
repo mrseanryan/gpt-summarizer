@@ -3,22 +3,14 @@ main_cli.py
 Author: Sean Ryan
 
 Use an LLM to summarize text of PDF files.
-
-Usage: main_cli.py <path to input file or input directory or URL> [options]
-
-The options are:
-[-l --language - The target output language. The default is set in config.py]
-[-o --output - The output directory. By default is None, so output is to stdout (no files are output).]
-[-h --help]
 """
 
 import sys
 from optparse import OptionParser
 
 from . import summarizer
-
 from . import config
-
+from . import util_version
 
 # usage() - prints out the usage text, from the top of this file :-)
 def usage(parser):
@@ -28,21 +20,22 @@ def usage(parser):
 
 # optparse - parse the args
 parser = OptionParser(
-    usage="%prog <path to input file or input directory or URL> [options]"
+    usage="%prog <path to input file or input directory or URL> [options]",
+    version=util_version.VERSION
 )
 parser.add_option(
     "-l",
     "--language",
     dest="target_language",
     default=config.TARGET_LANGUAGE,
-    help="The target output language. The default is set in config.py. Example: English.",
+    help="the target output language. The default is set in config.py. Example: English.",
 )
 parser.add_option(
     "-o",
     "--output",
     dest="output_dir",
     default=None,
-    help="The output directory. By default is None, so output is to stdout (no files are output).",
+    help="the output directory. By default is None, so output is to stdout (no files are output).",
 )
 
 (options, args) = parser.parse_args()

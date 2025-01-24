@@ -1,3 +1,4 @@
+import datetime
 import os
 import html2text
 import json5
@@ -5,6 +6,7 @@ import yaml
 from collections import OrderedDict
 
 from cornsnake import (
+    util_date,
     util_print,
     util_file,
     util_time,
@@ -17,7 +19,7 @@ from . import extractor
 from . import prompts
 from . import util_chat
 from . import util_config
-
+from . import util_version
 
 def _clean_response(text):
     prelim_with_data_format = f"```{prompts.get_output_format_name().lower()}"
@@ -76,7 +78,7 @@ def _divide_into_chunks(list, size):
         yield list[i : i + size]
 
 
-def _get_path_to_output_file(path_to_input_file, path_to_output_dir):
+def _get_path_to_output_file(path_to_input_file:str, path_to_output_dir:str|None):
     if not path_to_output_dir:
         return None
     input_filename = util_file.get_last_part_of_path(path_to_input_file)
@@ -88,16 +90,34 @@ def _get_path_to_output_file(path_to_input_file, path_to_output_dir):
 
 
 def _write_output_file(
-    title, short_summary, long_summary, paragraphs, elapsed_seconds, cost, path_to_output_file
+    title:str, short_summary:str, long_summary:str, paragraphs:list[str], elapsed_seconds:float, cost:float, path_to_output_file:str, path_to_source:str, target_language: str|None
 ):
     file_result = OrderedDict()
     file_result["title"] = title
     file_result["short_summary"] = short_summary
     file_result["long_summary"] = long_summary
     file_result["paragraphs"] = paragraphs
-    file_result["total_time_seconds"] = elapsed_seconds
-    file_result["total_estimated_cost_currency"] = config.OPENAI_COST_CURRENCY
-    file_result["total_estimated_cost"] = cost
+
+    run_info = OrderedDict(
+    {
+        "total_time_seconds": elapsed_seconds,
+        "total_estimated_cost_currency": config.OPENAI_COST_CURRENCY,
+        "total_estimated_cost": cost,
+    })
+    file_result["run_info"] = run_info
+
+    tool_info = OrderedDict(
+        {
+            "tool_name": "gpt-summarizer",
+            "tool_version": util_version.VERSION,
+            "llm": util_config.llm_model()
+        }
+    )
+    file_result["tool_info"] = tool_info
+
+    file_result["summary_date"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    file_result["source_path"] = path_to_source
+    file_result["target_language"] = target_language
 
     yaml.add_representer(OrderedDict, lambda dumper, data: dumper.represent_mapping('tag:yaml.org,2002:map', data.items()))
     yaml_text = yaml.dump(file_result)
@@ -188,7 +208,7 @@ def _convert_array_of_dict_to_array(a_list):
     return a_list
 
 
-def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir):
+def _summarize_one_file(path_to_input_file: str, target_language: str|None, path_to_output_dir: str|None):
     util_print.print_section(f"Summarizing '{path_to_input_file}'")
 
     input_text = _extract_text(path_to_input_file)
@@ -272,21 +292,27 @@ def _summarize_one_file(path_to_input_file, target_language, path_to_output_dir)
 
         chunk_count += 1
 
+    short_summary = short_summary.strip()
+    long_summary = long_summary.strip()
+    paragraphs = [p.strip() for p in paragraphs]
+
     _print_file_result(title, short_summary, long_summary, paragraphs, elapsed_seconds, cost, len(input_text_chunks), chunks_failed)
 
     path_to_output_file = _get_path_to_output_file(
-        path_to_input_file, path_to_output_dir
+        path_to_input_file=path_to_input_file, path_to_output_dir=path_to_output_dir
     )
 
     if path_to_output_file:
         _write_output_file(
-            title,
-            short_summary,
-            long_summary,
-            paragraphs,
-            elapsed_seconds,
-            cost,
-            path_to_output_file,
+            title=title,
+            short_summary=short_summary,
+            long_summary=long_summary,
+            paragraphs=paragraphs,
+            elapsed_seconds=elapsed_seconds,
+            cost=cost,
+            path_to_output_file=path_to_output_file,
+            path_to_source=path_to_input_file,
+            target_language=target_language
         )
 
     return (elapsed_seconds, cost)

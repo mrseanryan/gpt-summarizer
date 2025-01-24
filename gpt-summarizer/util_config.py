@@ -31,6 +31,16 @@ def is_openai():
     return not _is_local_via_ctransformers() and not _is_local_via_ollama()
 
 
+def llm_model() -> str:
+    if is_local_via_ollama():
+        return config.OLLAMA_MODEL_NAME
+    elif is_openai():
+        return config.OPEN_AI_MODEL
+    elif is_local_via_ctransformers():
+        return "(a ctransformers model)"
+    else:
+        raise ValueError("Please check config.py: only one platform should be configured")
+
 def is_json_not_yaml():
     if is_openai():
         return False  # cheaper

@@ -1,92 +1,85 @@
-long_summary: 'The text discusses the ability to summarize text using ChatGPT or a
-  local LLM, supporting various file types like text, markdown, HTML, and PDF files.
-  This feature allows users to efficiently condense information from multiple sources,
-  aiding in tasks that require processing large amounts of text.
+title: Text Summarization with ChatGPT
+short_summary: 'The text discusses the capabilities of ChatGPT for summarizing various
+  file types, including text, markdown, HTML, and PDF files.
 
-  The tool provides multi-level summarization options, allowing users to generate
-  short, long, and per-paragraph summaries. Additionally, it offers translation services
-  to convert text into a target language. Users can batch summarize entire directories
-  of files or download files via URLs for summarization purposes, enhancing efficiency
-  and accessibility.
+  This text discusses the features of text summarization, including summarization
+  levels, translation to a target language, and batch summarization of files.
 
-  Private LLM offers enhanced privacy and protection of Intellectual Property by enabling
-  the use of locally hosted models. Cost savings are realized through the avoidance
-  of re-summarizing previously processed files and the ability to calculate cost estimates,
-  particularly when utilizing Open AI. The system generates output files efficiently.
+  The text discusses using a locally hosted LLM for privacy and IP protection, cost
+  savings by avoiding re-summarization, and calculating cost estimates.
 
-  The text highlights the advantages of YAML format, instructions for running local
-  LLM, and options for summarizing text files and PDFs. It also delves into the challenges
-  faced by language models with long contexts, emphasizing the impact of context length
-  on performance and proposing new evaluation methods.
+  The text discusses output files in YAML format, Python3 usage, and options for running
+  local LLM or Open AI Chat GPT. It also provides guidance on summarizing text and
+  using the gpt-summarizer tool.
 
-  The text explains file processing and cost estimation procedures, detailing the
-  use of figures from config.py. It offers guidance on utilizing gpt-summary through
-  remote or local LLM, with instructions on installation, configuration, and setting
-  up OpenAI keys. It also covers the installation of ctransformers, model downloads,
-  and GPU acceleration settings in config.py.
+  The text suggests new evaluation protocols for future long-context models, detailing
+  time and cost estimates for processing files.
 
-  The "Prompt Engineering for Developers" course by DeepLearning.ai is designed to
-  help developers improve their ability to craft prompts that yield desired outcomes
-  from AI models. By mastering prompt engineering techniques, participants can optimize
-  the performance of AI systems in various applications.
+  The text emphasizes the importance of using relevant information and requesting
+  sources for the information provided.
 
+  '
+long_summary: 'The text explores how ChatGPT can be utilized for summarizing different
+  file formats such as text, markdown, HTML, and PDF files. It highlights the ability
+  to process multiple large text files, PDFs, and provide translation services. ChatGPT
+  offers a versatile solution for text summarization needs.
+
+  The text explores the capabilities of text summarization, highlighting the ability
+  to summarize at different levels such as short, long, and per-paragraph. It also
+  covers the feature of translating text to a target language and the functionality
+  to batch summarize entire directories of files or download a file via URL for summarization.
+
+  The text explores the benefits of utilizing a locally hosted LLM for enhanced privacy
+  and IP protection. It also highlights cost-saving measures such as avoiding re-summarizing
+  files and providing cost estimates when using Open AI. The discussion emphasizes
+  the importance of safeguarding intellectual property and optimizing cost efficiency.
+
+  The text covers the advantages of YAML format for output files, Python3 usage, and
+  details on running local LLM or Open AI Chat GPT. It includes instructions on summarizing
+  text, using the gpt-summarizer tool, and handling PDF files. The content emphasizes
+  the importance of avoiding sensitive information in text and provides detailed steps
+  for summarization.
+
+  The text proposes new evaluation protocols for upcoming long-context models, providing
+  insights into time and cost estimates for processing files. It outlines completed
+  tasks, processing time, and the total estimated cost.
+
+  The text highlights the significance of utilizing pertinent information and encourages
+  the inclusion of source links. It draws inspiration from the ''Prompt Engineering
+  for Developers'' course by DeepLearning.ai.
 
   '
 paragraphs:
-- The text highlights the capability to summarize text using ChatGPT or a local LLM.
-- It mentions support for various file types such as text, markdown, HTML, and PDF
-  files.
-- This feature enables users to condense information from multiple sources efficiently.
-- It is beneficial for tasks that involve processing large amounts of text.
-- 'The tool offers summarization at different levels: short, long, and per-paragraph.'
-- It provides translation services to convert text into a target language.
-- Users can batch summarize whole directories of files.
-- It also allows downloading a file via URL for summarization purposes.
-- Private LLM provides enhanced privacy and IP protection by utilizing locally hosted
-  models.
-- Cost savings are achieved by avoiding re-summarizing files and offering cost estimates,
-  especially with Open AI.
-- The system efficiently generates output files for user convenience.
-- The text emphasizes the benefits of using YAML format over JSON for easier generation
-  and human readability.
-- Instructions are provided for running local LLM with ctransformers or using Open
-  AI Chat GPT with an API key.
-- Options for summarizing text files and PDFs are outlined, including using the gpt-summarizer
-  tool.
-- The challenges faced by language models with long contexts are discussed, highlighting
-  performance issues when relevant information is in the middle of the input.
-- Insights are offered on how language models handle input context and suggestions
-  for evaluating future long-context models.
-- Large files are processed in chunks with a final concatenated output.
-- Costs are estimated based on figures in config.py.
-- Instructions are provided for using gpt-summary via remote or local LLM.
-- Installation steps for required Python libraries are outlined.
-- Configuration settings in config.py are explained for GPU acceleration.
-- Mitigations for model errors and hallucinations are suggested.
-- The course "Prompt Engineering for Developers" by DeepLearning.ai aims to enhance
-  skills in creating effective prompts for AI models.
-short_summary: 'Summarize text using ChatGPT or a local LLM, with support for multiple
-  large text files, PDF files, and translation.
-
-  The tool offers summarization at various levels, including short, long, and per-paragraph.
-  It also provides translation services and can batch summarize directories or download
-  and summarize files from URLs.
-
-  Private LLM allows for maximum privacy and IP protection. Cost savings are achieved
-  by avoiding re-summarization and providing cost estimates. Output files are generated.
-
-  The text discusses the benefits of using YAML format over JSON, provides instructions
-  for running local LLM, and outlines options for summarizing text files and PDFs.
-
-  The text discusses file processing and cost estimation using figures from config.py.
-  It provides instructions for using gpt-summary via remote or local LLM, including
-  installation steps and configuration settings.
-
-  The DeepLearning.ai course "Prompt Engineering for Developers" focuses on enhancing
-  skills in creating effective prompts for AI models.
-
-
-  '
-total_estimated_cost: 0.0029850000000000002
-total_estimated_cost_currency: $
-total_time_seconds: 23.092586755752563
+- The text delves into the features of ChatGPT for summarizing various file types.
+- It emphasizes the support for text, markdown, HTML, and PDF files.
+- 'Summarize at different levels: short, long, and per-paragraph'
+- Translate to a target language
+- Batch summarize whole directories of files
+- Download a file via URL and summarize it
+- Optionally use a locally hosted LLM, for maximum privacy and prevent any loss of
+  IP (Intellectual Property)
+- Avoid re-summarizing a previously processed file
+- Calculate cost estimates (when using Open AI)
+- The text highlights the benefits of output files in YAML format over JSON.
+- It mentions Python3 usage and options for running local LLM or Open AI Chat GPT.
+- Guidance is provided on summarizing text and using the gpt-summarizer tool.
+- Instructions on handling PDF files and the importance of avoiding sensitive information
+  are included.
+- The text introduces new evaluation protocols for long-context models.
+- Time and cost estimates for processing files are detailed.
+- Insights into completed tasks and processing time are provided.
+- The total estimated cost is outlined.
+- Emphasizes the importance of using relevant information.
+- Encourages requesting links to the source of the information.
+- Inspired by the 'Prompt Engineering for Developers' course by DeepLearning.ai.
+run_info:
+  total_time_seconds: 15.705689668655396
+  total_estimated_cost_currency: $
+  total_estimated_cost: 0.003336
+tool_info:
+  tool_name: gpt-summarizer
+  tool_version: 1.2.0
+  llm: gpt-3.5-turbo
+summary_date: '2025-01-24 17:36:28'
+source_path: ./temp\downloaded--README.2025_01_24__173611.md
+target_language: English
