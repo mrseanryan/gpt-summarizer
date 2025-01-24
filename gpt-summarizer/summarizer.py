@@ -21,6 +21,7 @@ from . import util_chat
 from . import util_config
 from . import util_version
 
+
 def _clean_response(text):
     prelim_with_data_format = f"```{prompts.get_output_format_name().lower()}"
     if prelim_with_data_format in text:
@@ -78,7 +79,7 @@ def _divide_into_chunks(list, size):
         yield list[i : i + size]
 
 
-def _get_path_to_output_file(path_to_input_file:str, path_to_output_dir:str|None):
+def _get_path_to_output_file(path_to_input_file: str, path_to_output_dir: str | None):
     if not path_to_output_dir:
         return None
     input_filename = util_file.get_last_part_of_path(path_to_input_file)
@@ -90,7 +91,15 @@ def _get_path_to_output_file(path_to_input_file:str, path_to_output_dir:str|None
 
 
 def _write_output_file(
-    title:str, short_summary:str, long_summary:str, paragraphs:list[str], elapsed_seconds:float, cost:float, path_to_output_file:str, path_to_source:str, target_language: str|None
+    title: str,
+    short_summary: str,
+    long_summary: str,
+    paragraphs: list[str],
+    elapsed_seconds: float,
+    cost: float,
+    path_to_output_file: str,
+    path_to_source: str,
+    target_language: str | None,
 ):
     file_result = OrderedDict()
     file_result["title"] = title
@@ -99,11 +108,12 @@ def _write_output_file(
     file_result["paragraphs"] = paragraphs
 
     run_info = OrderedDict(
-    {
-        "total_time_seconds": elapsed_seconds,
-        "total_estimated_cost_currency": config.OPENAI_COST_CURRENCY,
-        "total_estimated_cost": cost,
-    })
+        {
+            "total_time_seconds": elapsed_seconds,
+            "total_estimated_cost_currency": config.OPENAI_COST_CURRENCY,
+            "total_estimated_cost": cost,
+        }
+    )
     file_result["run_info"] = run_info
 
     tool_info = OrderedDict(
@@ -111,7 +121,7 @@ def _write_output_file(
             "tool_name": "gpt-summarizer",
             "tool_version": util_version.VERSION,
             "llm": util_config.get_llm_model(),
-            "platform": util_config.get_platform()
+            "platform": util_config.get_platform(),
         }
     )
     file_result["tool_info"] = tool_info
@@ -120,7 +130,12 @@ def _write_output_file(
     file_result["source_path"] = path_to_source
     file_result["target_language"] = target_language
 
-    yaml.add_representer(OrderedDict, lambda dumper, data: dumper.represent_mapping('tag:yaml.org,2002:map', data.items()))
+    yaml.add_representer(
+        OrderedDict,
+        lambda dumper, data: dumper.represent_mapping(
+            "tag:yaml.org,2002:map", data.items()
+        ),
+    )
     yaml_text = yaml.dump(file_result)
     util_print.print_important(f"Writing YAML file to {path_to_output_file}")
     util_file.write_text_to_file(yaml_text, path_to_output_file)
@@ -145,7 +160,16 @@ def _chunk_text_by_words(input_text):
     return input_text_list
 
 
-def _print_file_result(title, short_summary, long_summary, paragraphs, elapsed_seconds, cost, chunk_count, chunks_failed):
+def _print_file_result(
+    title,
+    short_summary,
+    long_summary,
+    paragraphs,
+    elapsed_seconds,
+    cost,
+    chunk_count,
+    chunks_failed,
+):
     util_print.print_section(f"TITLE: {title}")
 
     util_print.print_section("FULL Short Summary")
@@ -165,7 +189,9 @@ def _print_file_result(title, short_summary, long_summary, paragraphs, elapsed_s
             f" -- THIS FILE estimated cost: {config.OPENAI_COST_CURRENCY}{cost}"
         )
     if chunks_failed > 0:
-        util_print.print_warning(f"{chunks_failed} of {chunk_count} document chunks were skipped. If the summary is not of high quality, you can re-run with smaller chunks, by reducing MAIN_INPUT_WORDS in config.py.")
+        util_print.print_warning(
+            f"{chunks_failed} of {chunk_count} document chunks were skipped. If the summary is not of high quality, you can re-run with smaller chunks, by reducing MAIN_INPUT_WORDS in config.py."
+        )
 
 
 def _extract_text(path_to_input_file):
@@ -209,7 +235,9 @@ def _convert_array_of_dict_to_array(a_list):
     return a_list
 
 
-def _summarize_one_file(path_to_input_file: str, target_language: str|None, path_to_output_dir: str|None):
+def _summarize_one_file(
+    path_to_input_file: str, target_language: str | None, path_to_output_dir: str | None
+):
     util_print.print_section(f"Summarizing '{path_to_input_file}'")
 
     input_text = _extract_text(path_to_input_file)
@@ -297,7 +325,16 @@ def _summarize_one_file(path_to_input_file: str, target_language: str|None, path
     long_summary = long_summary.strip()
     paragraphs = [p.strip() for p in paragraphs]
 
-    _print_file_result(title, short_summary, long_summary, paragraphs, elapsed_seconds, cost, len(input_text_chunks), chunks_failed)
+    _print_file_result(
+        title,
+        short_summary,
+        long_summary,
+        paragraphs,
+        elapsed_seconds,
+        cost,
+        len(input_text_chunks),
+        chunks_failed,
+    )
 
     path_to_output_file = _get_path_to_output_file(
         path_to_input_file=path_to_input_file, path_to_output_dir=path_to_output_dir
@@ -313,7 +350,7 @@ def _summarize_one_file(path_to_input_file: str, target_language: str|None, path
             cost=cost,
             path_to_output_file=path_to_output_file,
             path_to_source=path_to_input_file,
-            target_language=target_language
+            target_language=target_language,
         )
 
     return (elapsed_seconds, cost)

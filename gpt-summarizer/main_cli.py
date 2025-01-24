@@ -12,6 +12,7 @@ from . import summarizer
 from . import config
 from . import util_version
 
+
 # usage() - prints out the usage text, from the top of this file :-)
 def usage(parser):
     print(__doc__)
@@ -21,7 +22,7 @@ def usage(parser):
 # optparse - parse the args
 parser = OptionParser(
     usage="%prog <path to input file or input directory or URL> [options]",
-    version=util_version.VERSION
+    version=util_version.VERSION,
 )
 parser.add_option(
     "-l",

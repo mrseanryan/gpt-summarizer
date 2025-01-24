@@ -33,9 +33,13 @@ if util_config.is_local_via_ctransformers():
             model_type=config.LOCAL_CTRANSFORMERS_MODEL_TYPE,
         )
 elif util_config.is_local_via_ollama():
-    util_print.print_with_color(f"ollama model: [{config.OLLAMA_MODEL_NAME}]", util_color.bcolors.MAGENTA)
+    util_print.print_with_color(
+        f"ollama model: [{config.OLLAMA_MODEL_NAME}]", util_color.bcolors.MAGENTA
+    )
 else:
-    util_print.print_with_color(f"Open AI model: [{config.OPEN_AI_MODEL}]", util_color.bcolors.MAGENTA)
+    util_print.print_with_color(
+        f"Open AI model: [{config.OPEN_AI_MODEL}]", util_color.bcolors.MAGENTA
+    )
     openai.api_key = service_api_key.get_openai_key()
 
 
@@ -49,15 +53,15 @@ def get_completion_from_openai(prompt):
 
     response_format = None
     if util_config.is_json_not_yaml():
-        response_format = { "type": "json_object" }
+        response_format = {"type": "json_object"}
 
     response = client.chat.completions.create(
         model=config.OPEN_AI_MODEL,
         messages=messages,
         # Temperature is the degree of randomness of the model's output
         # 0 would be same each time. 0.7 or 1 would be difference each time, and less likely words can be used:
-        temperature=config.TEMPERATURE,        
-        response_format=response_format
+        temperature=config.TEMPERATURE,
+        response_format=response_format,
     )
 
     estimated_cost = util_cost_estimator.estimate_openai_cost(

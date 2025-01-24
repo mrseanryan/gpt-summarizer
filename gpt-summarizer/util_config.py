@@ -39,7 +39,10 @@ def get_llm_model() -> str:
     elif is_local_via_ctransformers():
         return "(a ctransformers model)"
     else:
-        raise ValueError("Please check config.py: only one platform should be configured")
+        raise ValueError(
+            "Please check config.py: only one platform should be configured"
+        )
+
 
 def get_platform() -> str:
     if is_local_via_ollama():
@@ -50,7 +53,10 @@ def get_platform() -> str:
     elif is_local_via_ctransformers():
         return "ctransformers (local)"
     else:
-        raise ValueError("Please check config.py: only one platform should be configured")
+        raise ValueError(
+            "Please check config.py: only one platform should be configured"
+        )
+
 
 def is_json_not_yaml():
     if is_openai():
