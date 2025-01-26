@@ -1,7 +1,14 @@
-from . import config
 import os
+import html2text
 
-from cornsnake import util_dir, util_print, util_network
+from cornsnake import (
+    util_dir,
+    util_file,
+    util_network,
+    util_print,
+)
+
+from . import config
 
 
 def _download_file(url: str) -> str:
@@ -36,3 +43,13 @@ def collect_input_filepaths(path_to_input_file_or_dir_or_url: str) -> list[str]:
     else:
         input_filepaths = [path_to_input_file_or_dir_or_url]
     return input_filepaths
+
+
+def extract_text(path_to_input_file: str) -> str:
+    input_text: str = util_file.read_text_from_text_or_pdf_file_skipping_comments(
+        path_to_input_file
+    )
+    if path_to_input_file.endswith(".html"):
+        return html2text.html2text(input_text)
+
+    return input_text
