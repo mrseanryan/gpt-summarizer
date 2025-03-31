@@ -5,6 +5,7 @@ Summarize text using ChatGPT or a local LLM, with support for multiple large tex
 - can read from a file, a directory (summarizing multiple files) or else a URL (downloading and summarizing)
 - can translate to another language (defaults to English)
 - outputs in YAML format, with title, short and long summaries, paragraph summaries and metadata.
+- preserves the original style and the narrator (the 'person' I/we etc).
 
 ## Features
 

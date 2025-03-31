@@ -100,6 +100,7 @@ def _build_next_complex_prompt_and_translate_to(input_text: str, target_language
 RULES:
 R1. Do NOT mention the text, study, document or paper.
 R2. Create shorted versions of the original text, in the same style.
+R3. Preserve the 'person' or 'narrator' of the text: for example, if the text is written in first-person, then also output in first-person.
 
 PROCESS TO FOLLOW:
     1. Analyze the given input text, noting its style and tone.
