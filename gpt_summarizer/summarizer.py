@@ -81,7 +81,7 @@ def _summarize_one_file(
             if target_language is None:
                 prompt = prompts.get_chatgpt_summarize_prompt(text)
             else:
-                prompt = prompts.get_chatgpt_summary_prompt_and_translate_to(
+                prompt = prompts.get_chatgpt_summarize_prompt_and_translate_to(
                     text, target_language
                 )
             (rsp, _elapsed_seconds, _cost) = llm_caller.send_to_llm_with_retry(prompt)

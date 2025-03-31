@@ -25,6 +25,8 @@ OPENAI_COST__PER_PROMPT_ONE_MILLION_TOKENS__USD = 0.15
 OPENAI_COST__PER_COMPLETION_ONE_MILLION_TOKENS__USD = 0.6
 OPENAI_COST__DECIMALS = 4
 
+OPEN_AI_USE_COMPLEX_PROMPT = True  # If True, then use a more complex prompt (may be slower and slightly more expensive).
+
 # =======================================================
 # === LOCAL LLM VIA OLLAMA [recommended local option] ===
 OLLAMA_MODEL_NAME = ""  # llama3 or phi3 or qwen2.5-coder:7b
