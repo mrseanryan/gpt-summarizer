@@ -4,7 +4,7 @@
 SHORT_SUMMARY_WORD_COUNT = 50
 LONG_SUMMARY_WORD_COUNT = 300
 
-MAIN_INPUT_WORDS = 500  # Chat-GPT has max 4097 tokens. For local model, you may want to use a lower limit for performance reasons.
+CHUNK_SIZE_IN_WORDS = 500  # Some LLMs like Chat-GPT have a much longer context window. For a local model, you may want to use a lower limit for performance reasons.
 # Note: when chunking, we just split by space not by tokens.
 
 # 0 would be same each time. 0.7 or 1 would be different each time, and less likely words can be used:
@@ -48,7 +48,10 @@ LOCAL_CTRANSFORMERS_GPU_LAYERS = (
 
 # =========================
 # === ADVANCED SETTINGS ===
-RETRY_WAIT_SECONDS = 3
-RETRY_COUNT = 3
+CHUNK_OVERLAP_RATIO = (
+    0.05  # When chunking, there can be split sentences. Chunk overlap mitigates this.
+)
 is_debug = False
 is_local__json_not_yaml = True  # YAML is generally cheaper and faster, but some LLMs may be more reliable with JSON
+RETRY_WAIT_SECONDS = 3
+RETRY_COUNT = 3

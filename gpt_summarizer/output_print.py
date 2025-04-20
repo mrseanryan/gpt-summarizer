@@ -51,5 +51,5 @@ def print_file_result(
         )
     if chunks_failed > 0:
         util_print.print_warning(
-            f"{chunks_failed} of {chunk_count} document chunks were skipped. If the summary is not of high quality, you can re-run with smaller chunks, by reducing MAIN_INPUT_WORDS in config.py."
+            f"{chunks_failed} of {chunk_count} document chunks were skipped. If the summary is not of high quality, you can re-run with smaller chunks, by reducing CHUNK_SIZE_IN_WORDS in config.py."
         )

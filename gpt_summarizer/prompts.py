@@ -19,7 +19,9 @@ USER: Summarize this text denoted by backticks:
 
 
 def get_chatgpt_summarize_prompt(input_text: str) -> str:
-    return _build_next_complex_prompt_and_translate_to(input_text, config.TARGET_LANGUAGE)
+    return _build_next_complex_prompt_and_translate_to(
+        input_text, config.TARGET_LANGUAGE
+    )
 
 
 def get_chatgpt_summarize_prompt_and_translate_to(
@@ -30,8 +32,11 @@ def get_chatgpt_summarize_prompt_and_translate_to(
     else:
         return _build_next_simple_prompt_and_translate_to(input_text, target_language)
 
+
 def get_ollama_summarize_prompt(input_text: str) -> str:
-    return _build_next_simple_prompt_and_translate_to(input_text, config.TARGET_LANGUAGE)
+    return _build_next_simple_prompt_and_translate_to(
+        input_text, config.TARGET_LANGUAGE
+    )
 
 
 def get_ollama_summary_prompt_and_translate_to(
@@ -71,7 +76,9 @@ OUTPUT_TEXT_STYLE = "The output text preserve the original style and tone. The s
 SYSTEM_PROMPT__OPENAI = f"You are a summary assistant, skilled in summarizing texts whilst preserving the main points and original style. The target language is {config.TARGET_LANGUAGE}."
 
 
-def _build_next_simple_prompt_and_translate_to(input_text: str, target_language: str) -> str:
+def _build_next_simple_prompt_and_translate_to(
+    input_text: str, target_language: str
+) -> str:
     """Simple prompt suitable for smaller LLMs, such as locally hosted LLM."""
     print("[simple prompt]")
     return f"""
@@ -92,7 +99,10 @@ def _build_next_simple_prompt_and_translate_to(input_text: str, target_language:
     assistant: ```{get_output_format_name().lower()}
     """
 
-def _build_next_complex_prompt_and_translate_to(input_text: str, target_language: str) -> str:
+
+def _build_next_complex_prompt_and_translate_to(
+    input_text: str, target_language: str
+) -> str:
     """Complex Chain-of-thought prompt suitable for larger LLMs, such as ChatGPT."""
     print("[complex prompt]")
     return f"""Examine the provided user prompt, the text input, noting its style of writing and tone.
