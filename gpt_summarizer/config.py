@@ -51,7 +51,7 @@ LOCAL_CTRANSFORMERS_GPU_LAYERS = (
 CHUNK_OVERLAP_RATIO = (
     0.05  # When chunking, there can be split sentences. Chunk overlap mitigates this.
 )
-is_debug = False
-is_local__json_not_yaml = True  # YAML is generally cheaper and faster, but some LLMs may be more reliable with JSON
-RETRY_WAIT_SECONDS = 3
+IS_DEBUG = False
+IS_LOCAL__JSON_NOT_YAML = True  # YAML is generally cheaper and faster, but some LLMs may be more reliable with JSON
 RETRY_COUNT = 3
+RETRY_WAIT_SECONDS = 3

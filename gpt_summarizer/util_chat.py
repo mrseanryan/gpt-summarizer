@@ -121,7 +121,7 @@ def send_prompt(
 def next_prompt(prompt: str) -> Tuple[str | None, float, float]:
     start = util_time.start_timer()
     rsp = None
-    if config.is_debug:
+    if config.IS_DEBUG:
         (rsp, cost) = send_prompt(prompt)
     else:
         (rsp, cost) = send_prompt(prompt, show_input=False, show_output=False)

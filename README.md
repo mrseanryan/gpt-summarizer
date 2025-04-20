@@ -238,7 +238,7 @@ YAML is generally cheaper and faster, but some LLMs may be more reliable if aske
 
 For a local LLM, you can decide which format to use via `config.py`:
 
-- edit the value of `is_local__json_not_yaml`
+- edit the value of `IS_LOCAL__JSON_NOT_YAML`
 
 
 ### Option 3 - Local LLM via ctransformers

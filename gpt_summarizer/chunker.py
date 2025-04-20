@@ -46,7 +46,7 @@ def chunk_text_by_words(input_text: str) -> list[str]:
             overlap_ratio=config.CHUNK_OVERLAP_RATIO,
         )
 
-        if config.is_debug:
+        if config.IS_DEBUG:
             for i, chunk in enumerate(chunk_list):
                 util_print.print_section(f"Chunk:{i}")
                 print(chunk)

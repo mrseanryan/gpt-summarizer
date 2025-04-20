@@ -34,7 +34,7 @@ def send_to_llm_with_retry(prompt: str) -> RSP_AND_METADATA:
         except Exception as error:
             util_print.print_error("Error parsing response")
             util_print.print_error(error)
-            if config.is_debug:
+            if config.IS_DEBUG:
                 print("REQ: ", prompt)
                 print("RSP: ", rsp)
             if util_config.is_openai():

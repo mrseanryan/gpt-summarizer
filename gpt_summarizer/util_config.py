@@ -60,4 +60,4 @@ def get_platform() -> str:
 def is_json_not_yaml() -> bool:
     if is_openai():
         return False  # cheaper
-    return config.is_local__json_not_yaml
+    return config.IS_LOCAL__JSON_NOT_YAML
