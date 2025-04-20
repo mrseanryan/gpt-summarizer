@@ -51,10 +51,6 @@ def chunk_text_by_words(input_text: str) -> list[str]:
                 util_print.print_section(f"Chunk:{i}")
                 print(chunk)
 
-        import pdb
-
-        pdb.set_trace()
-
         util_print.print_important(f"Split into {len(chunk_list)} chunks")
 
     return chunk_list

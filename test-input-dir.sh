@@ -1,3 +1,5 @@
+set -e
+
 outdir=./temp/output
 
 if [ -d "$outdir" ]; then
