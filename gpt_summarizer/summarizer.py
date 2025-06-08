@@ -191,6 +191,7 @@ def summarize_file_or_dir_or_url(
 
     files_processed = 0
     files_skipped = 0
+    files_bad = 0
     elapsed_seconds = 0.0
     cost = 0.0
     for path_to_input_file in input_filepaths:
@@ -217,9 +218,10 @@ def summarize_file_or_dir_or_url(
             files_processed += 1
         except Exception as e:
             util_print.print_error(f"Exception occurred: {str(e)} [skipped file]")
+            files_bad += 1
 
     elapsed_seconds = round(elapsed_seconds, 2)
     cost = _round_cost(cost)
     output_print.print_final_result(
-        files_processed, elapsed_seconds, files_skipped, cost
+        files_processed, elapsed_seconds, files_skipped, cost, files_bad
     )

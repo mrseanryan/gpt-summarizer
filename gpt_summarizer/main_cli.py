@@ -63,7 +63,7 @@ if options.output_dir:
 
 path_to_move_done_files_dir = None
 if options.path_to_move_done_files_dir:
-    path_to_move_done_files_dir = path_to_move_done_files_dir
+    path_to_move_done_files_dir = options.path_to_move_done_files_dir
 
 summarizer.summarize_file_or_dir_or_url(
     path_to_input_file_or_dir_or_url=path_to_input_file_or_dir_or_url,

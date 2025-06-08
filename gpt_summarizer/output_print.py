@@ -7,14 +7,22 @@ from . import config
 
 
 def print_final_result(
-    files_processed: int, elapsed_seconds: float, files_skipped: int, cost: float
+    files_processed: int,
+    elapsed_seconds: float,
+    files_skipped: int,
+    cost: float,
+    files_bad: int,
 ) -> None:
     util_print.print_section("Completed")
     util_print.print_result(
         f"{files_processed} files processed in {util_time.describe_elapsed_seconds(elapsed_seconds)}"
     )
     if files_skipped > 0:
-        util_print.print_result(f"{files_skipped} files skipped")
+        util_print.print_result(
+            f"{files_skipped} files skipped (output already exists)"
+        )
+    if files_bad > 0:
+        util_print.print_warning(f"{files_bad} bad files skipped")
     if cost > 0:
         util_print.print_important(
             f" -- Total estimated cost: {config.OPENAI_COST_CURRENCY}{cost}"
