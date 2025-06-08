@@ -185,25 +185,28 @@ def summarize_file_or_dir_or_url(
     elapsed_seconds = 0.0
     cost = 0.0
     for path_to_input_file in input_filepaths:
-        path_to_output_file = output_file.get_path_to_output_file(
-            path_to_input_file, path_to_output_dir
-        )
-        if path_to_output_file and os.path.exists(path_to_output_file):
-            util_print.print_warning(
-                f"[skipping] output file '{path_to_output_file}' already exists"
+        try:
+            path_to_output_file = output_file.get_path_to_output_file(
+                path_to_input_file, path_to_output_dir
             )
-            files_skipped += 1
-            continue
+            if path_to_output_file and os.path.exists(path_to_output_file):
+                util_print.print_warning(
+                    f"[skipping] output file '{path_to_output_file}' already exists"
+                )
+                files_skipped += 1
+                continue
 
-        (_elapsed_seconds, _cost) = _summarize_one_file(
-            path_to_input_file=path_to_input_file,
-            target_language=target_language,
-            path_to_output_dir=path_to_output_dir,
-            original_path_to_input_file_or_dir_or_url=path_to_input_file_or_dir_or_url,
-        )
-        elapsed_seconds += _elapsed_seconds
-        cost += _cost
-        files_processed += 1
+            (_elapsed_seconds, _cost) = _summarize_one_file(
+                path_to_input_file=path_to_input_file,
+                target_language=target_language,
+                path_to_output_dir=path_to_output_dir,
+                original_path_to_input_file_or_dir_or_url=path_to_input_file_or_dir_or_url,
+            )
+            elapsed_seconds += _elapsed_seconds
+            cost += _cost
+            files_processed += 1
+        except Exception as e:
+            util_print.print_error(f"Exception occurred: {str(e)} [skipped file]")
 
     elapsed_seconds = round(elapsed_seconds, 2)
     cost = _round_cost(cost)
