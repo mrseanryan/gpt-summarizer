@@ -50,10 +50,18 @@ Output:
 ```
 Usage: main_cli.py <path to input file or input directory or URL> [options]
 
-The options are:
-[-l --language - The target output language. The default is set in config.py]
-[-o --output - The output directory. By default is None, so output is to stdout (no files are output).]
-[-h --help]
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -l TARGET_LANGUAGE, --language=TARGET_LANGUAGE
+                        the target output language. The default is set in
+                        config.py. Example: English.
+  -o OUTPUT_DIR, --output=OUTPUT_DIR
+                        the output directory. By default is None, so output is
+                        to stdout (no files are output).
+  -m DONE_FILES_DIR, --move=DONE_FILES_DIR
+                        the directory to move 'done' input files. By default
+                        is None, so input files are not moved.
 ```
 
 1. Copy the text you want to summarize, into a file like `data/input.txt`.
