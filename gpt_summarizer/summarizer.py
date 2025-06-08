@@ -168,10 +168,15 @@ def _summarize_one_file(
         )
 
     if path_to_move_done_files_dir:
-        util_print.print_important(
-            f"Moving input file {path_to_input_file} to {path_to_move_done_files_dir}"
+        util_dir.ensure_dir_exists(path_to_move_done_files_dir)
+        moved_file_path = os.path.join(
+            path_to_move_done_files_dir, os.path.basename(path_to_input_file)
         )
-        util_file.move_file(path_to_input_file, path_to_move_done_files_dir)
+        moved_file_path = util_file.get_unique_filepath(moved_file_path)
+        util_print.print_important(
+            f"Moving input file '{path_to_input_file}' => '{moved_file_path}'"
+        )
+        util_file.move_file(path_to_input_file, moved_file_path)
 
     return (elapsed_seconds, cost)
 
