@@ -2,8 +2,9 @@ import os
 from typing import Any, Tuple
 
 from cornsnake import (
-    util_print,
+    util_file,
     util_dir,
+    util_print,
 )
 
 from . import chunker
@@ -31,6 +32,7 @@ def _summarize_one_file(
     target_language: str | None,
     path_to_output_dir: str | None,
     original_path_to_input_file_or_dir_or_url: str,
+    path_to_move_done_files_dir: str | None,
 ) -> Tuple[float, float]:  # (elapsed_seconds, cost)
     util_print.print_section(f"Summarizing '{path_to_input_file}'")
 
@@ -165,6 +167,12 @@ def _summarize_one_file(
             target_language=target_language,
         )
 
+    if path_to_move_done_files_dir:
+        util_print.print_important(
+            f"Moving input file {path_to_input_file} to {path_to_move_done_files_dir}"
+        )
+        util_file.move_file(path_to_input_file, path_to_move_done_files_dir)
+
     return (elapsed_seconds, cost)
 
 
@@ -172,6 +180,7 @@ def summarize_file_or_dir_or_url(
     path_to_input_file_or_dir_or_url: str,
     path_to_output_dir: str | None,
     target_language: str | None,
+    path_to_move_done_files_dir: str | None,
 ) -> None:
     if path_to_output_dir:
         util_dir.ensure_dir_exists(path_to_output_dir)
@@ -201,6 +210,7 @@ def summarize_file_or_dir_or_url(
                 target_language=target_language,
                 path_to_output_dir=path_to_output_dir,
                 original_path_to_input_file_or_dir_or_url=path_to_input_file_or_dir_or_url,
+                path_to_move_done_files_dir=path_to_move_done_files_dir,
             )
             elapsed_seconds += _elapsed_seconds
             cost += _cost
