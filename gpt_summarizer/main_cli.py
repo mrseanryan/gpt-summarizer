@@ -41,6 +41,14 @@ parser.add_option(
     help="the output directory. By default is None, so output is to stdout (no files are output).",
 )
 parser.add_option(
+    "-p",
+    "--paragraphs",
+    dest="include_paragraphs",
+    default=False,
+    metavar="INCLUDE_PARAGRAPHS",
+    help="include per-paragraph summaries. The default is False.",
+)
+parser.add_option(
     "-m",
     "--move",
     dest="path_to_move_done_files_dir",
@@ -70,4 +78,5 @@ summarizer.summarize_file_or_dir_or_url(
     path_to_output_dir=path_to_output_dir,
     target_language=target_language,
     path_to_move_done_files_dir=path_to_move_done_files_dir,
+    include_paragraphs=options.include_paragraphs,
 )

@@ -33,6 +33,7 @@ def _summarize_one_file(
     path_to_output_dir: str | None,
     original_path_to_input_file_or_dir_or_url: str,
     path_to_move_done_files_dir: str | None,
+    include_paragraphs: bool,
 ) -> Tuple[float, float]:  # (elapsed_seconds, cost)
     util_print.print_section(f"Summarizing '{path_to_input_file}'")
 
@@ -71,20 +72,24 @@ def _summarize_one_file(
             rsp = {"short_summary": response_plain}
         elif util_config.is_local_via_ollama():
             if target_language is None:
-                prompt = prompts.get_ollama_summarize_prompt(text)
+                prompt = prompts.get_ollama_summarize_prompt(
+                    text, include_paragraphs=include_paragraphs
+                )
             else:
                 prompt = prompts.get_ollama_summary_prompt_and_translate_to(
-                    text, target_language
+                    text, target_language, include_paragraphs=include_paragraphs
                 )
             (rsp, _elapsed_seconds, _cost) = llm_caller.send_to_llm_with_retry(prompt)
             elapsed_seconds += _elapsed_seconds
             cost += _cost
         elif util_config.is_openai():
             if target_language is None:
-                prompt = prompts.get_chatgpt_summarize_prompt(text)
+                prompt = prompts.get_chatgpt_summarize_prompt(
+                    text, include_paragraphs=include_paragraphs
+                )
             else:
                 prompt = prompts.get_chatgpt_summarize_prompt_and_translate_to(
-                    text, target_language
+                    text, target_language, include_paragraphs=include_paragraphs
                 )
             (rsp, _elapsed_seconds, _cost) = llm_caller.send_to_llm_with_retry(prompt)
             elapsed_seconds += _elapsed_seconds
@@ -186,6 +191,7 @@ def summarize_file_or_dir_or_url(
     path_to_output_dir: str | None,
     target_language: str | None,
     path_to_move_done_files_dir: str | None,
+    include_paragraphs: bool,
 ) -> None:
     if path_to_output_dir:
         util_dir.ensure_dir_exists(path_to_output_dir)
@@ -217,6 +223,7 @@ def summarize_file_or_dir_or_url(
                 path_to_output_dir=path_to_output_dir,
                 original_path_to_input_file_or_dir_or_url=path_to_input_file_or_dir_or_url,
                 path_to_move_done_files_dir=path_to_move_done_files_dir,
+                include_paragraphs=include_paragraphs,
             )
             elapsed_seconds += _elapsed_seconds
             cost += _cost

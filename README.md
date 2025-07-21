@@ -59,6 +59,8 @@ Options:
   -o OUTPUT_DIR, --output=OUTPUT_DIR
                         the output directory. By default is None, so output is
                         to stdout (no files are output).
+  -p INCLUDE_PARAGRAPHS, --paragraphs=INCLUDE_PARAGRAPHS
+                        include per-paragraph summaries. The default is False.
   -m DONE_FILES_DIR, --move=DONE_FILES_DIR
                         the directory to move 'done' input files. By default
                         is None, so input files are not moved.
