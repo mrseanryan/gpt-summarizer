@@ -1,3 +1,3 @@
 set -e
 
-python -m ruff format
+poetry run python -m ruff format
