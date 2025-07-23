@@ -47,12 +47,15 @@ def print_file_result(
     util_print.print_section("FULL Long Summary")
     print(long_summary)
 
-    util_print.print_section("FULL paragraphs Summary")
-    print("\n".join(paragraphs))
+    if paragraphs:
+        util_print.print_section("FULL paragraphs Summary")
+        print("\n".join(paragraphs))
 
     util_print.print_result(
         f" -- THIS FILE time: {util_time.describe_elapsed_seconds(elapsed_seconds)}"
     )
+    util_print.print_important(f" -- THIS FILE chunks: {chunk_count}")
+
     if cost > 0.0:
         util_print.print_important(
             f" -- THIS FILE estimated cost: {config.OPENAI_COST_CURRENCY}{cost}"

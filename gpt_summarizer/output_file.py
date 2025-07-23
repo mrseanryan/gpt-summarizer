@@ -38,6 +38,7 @@ def write_output_file(
     path_to_source: str,
     original_path_to_input_file_or_dir_or_url: str,
     target_language: str | None,
+    chunk_count: int
 ) -> None:
     path_to_output_file = get_path_to_output_file(
         path_to_input_file=path_to_input_file, path_to_output_dir=path_to_output_dir
@@ -54,6 +55,7 @@ def write_output_file(
             "total_time_seconds": elapsed_seconds,
             "total_estimated_cost_currency": config.OPENAI_COST_CURRENCY,
             "total_estimated_cost": cost,
+            "chunk_count": chunk_count
         }
     )
     file_result["run_info"] = run_info

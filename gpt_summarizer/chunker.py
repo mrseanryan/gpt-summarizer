@@ -39,10 +39,16 @@ def chunk_text_by_words(input_text: str) -> list[str]:
         util_print.print_warning(
             f"The input file has many words! Max is {config.CHUNK_SIZE_IN_WORDS} but that file has {input_words_count} words. Will chunk the text."
         )
+
+        chunk_size_in_words =  config.CHUNK_SIZE_IN_WORDS
+        if config.MAX_CHUNKS > 0:
+            # Limit the number of chunks (else long texts get a long summary)
+            chunk_size_in_words = round(input_words_count / config.MAX_CHUNKS)
+
         # TODO (someone): should convert chunk size from words -> tokens
         chunk_list = _divide_into_chunks(
             input_text=input_text,
-            chunk_size_in_tokens=config.CHUNK_SIZE_IN_WORDS,
+            chunk_size_in_tokens=chunk_size_in_words,
             overlap_ratio=config.CHUNK_OVERLAP_RATIO,
         )
 

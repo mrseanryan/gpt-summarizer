@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gpt_summarizer"
-version = "1.3.0"
+version = "1.4.0"
 description = "Summarize text using ChatGPT or a local LLM, with support for multiple large text files, PDF files and translation."
 authors = ["Sean Ryan <mr.sean.ryan@gmail.com>"]
 readme = "README.md"

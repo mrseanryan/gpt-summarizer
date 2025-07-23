@@ -7,6 +7,8 @@ LONG_SUMMARY_WORD_COUNT = 300
 CHUNK_SIZE_IN_WORDS = 500  # Some LLMs like Chat-GPT have a much longer context window. For a local model, you may want to use a lower limit for performance reasons.
 # Note: when chunking, we just split by space not by tokens.
 
+MAX_CHUNKS = 12
+
 # 0 would be same each time. 0.7 or 1 would be different each time, and less likely words can be used:
 TEMPERATURE = 0.0
 

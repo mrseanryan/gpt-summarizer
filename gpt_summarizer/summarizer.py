@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import os
 from typing import Any, Tuple
 
@@ -26,6 +27,11 @@ def _extract_text_to_chunks(path_to_input_file: str) -> list[str]:
     input_text = extractor.extract_text(path_to_input_file)
     return chunker.chunk_text_by_words(input_text)
 
+@dataclass
+class SummarizeFileResult:
+    elapsed_seconds: float
+    cost: float
+    chunk_count: int
 
 def _summarize_one_file(
     path_to_input_file: str,
@@ -34,7 +40,7 @@ def _summarize_one_file(
     original_path_to_input_file_or_dir_or_url: str,
     path_to_move_done_files_dir: str | None,
     include_paragraphs: bool,
-) -> Tuple[float, float]:  # (elapsed_seconds, cost)
+) -> SummarizeFileResult:
     util_print.print_section(f"Summarizing '{path_to_input_file}'")
 
     input_text_chunks = _extract_text_to_chunks(path_to_input_file)
@@ -170,6 +176,7 @@ def _summarize_one_file(
             path_to_source=path_to_input_file,
             original_path_to_input_file_or_dir_or_url=original_path_to_input_file_or_dir_or_url,
             target_language=target_language,
+            chunk_count=chunk_count
         )
 
     if path_to_move_done_files_dir:
@@ -183,7 +190,7 @@ def _summarize_one_file(
         )
         util_file.move_file(path_to_input_file, moved_file_path)
 
-    return (elapsed_seconds, cost)
+    return SummarizeFileResult(elapsed_seconds=elapsed_seconds, cost=cost, chunk_count=len(input_text_chunks))
 
 
 def summarize_file_or_dir_or_url(
@@ -217,7 +224,7 @@ def summarize_file_or_dir_or_url(
                 files_skipped += 1
                 continue
 
-            (_elapsed_seconds, _cost) = _summarize_one_file(
+            summarize_file_result = _summarize_one_file(
                 path_to_input_file=path_to_input_file,
                 target_language=target_language,
                 path_to_output_dir=path_to_output_dir,
@@ -225,8 +232,8 @@ def summarize_file_or_dir_or_url(
                 path_to_move_done_files_dir=path_to_move_done_files_dir,
                 include_paragraphs=include_paragraphs,
             )
-            elapsed_seconds += _elapsed_seconds
-            cost += _cost
+            elapsed_seconds += summarize_file_result.elapsed_seconds
+            cost += summarize_file_result.cost
             files_processed += 1
         except Exception as e:
             util_print.print_error(f"Exception occurred: {str(e)} [skipped file]")
