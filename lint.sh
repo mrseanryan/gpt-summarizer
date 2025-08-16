@@ -1,3 +1,4 @@
+#!/bin/bash
 # so future errors halt the script.
 set -e
 
