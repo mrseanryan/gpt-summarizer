@@ -41,7 +41,8 @@ def chunk_text_by_words(input_text: str) -> list[str]:
         )
 
         chunk_size_in_words =  config.CHUNK_SIZE_IN_WORDS
-        if config.MAX_CHUNKS > 0:
+        number_of_chunks = round(input_words_count / chunk_size_in_words)
+        if config.MAX_CHUNKS > 0 and number_of_chunks > config.MAX_CHUNKS:
             # Limit the number of chunks (else long texts get a long summary)
             chunk_size_in_words = round(input_words_count / config.MAX_CHUNKS)
 
