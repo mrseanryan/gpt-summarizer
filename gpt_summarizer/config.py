@@ -21,10 +21,10 @@ TARGET_LANGUAGE = "English"
 OPEN_AI_MODEL = "gpt-4o-mini"  # gpt-3.5-turbo
 #
 # source = https://openai.com/api/pricing/
-# updated Jan 2025
+# updated Sept 2025
 OPENAI_COST_CURRENCY = "$"
-OPENAI_COST__PER_PROMPT_ONE_MILLION_TOKENS__USD = 0.1
-OPENAI_COST__PER_COMPLETION_ONE_MILLION_TOKENS__USD = 4.4
+OPENAI_COST__PER_PROMPT_ONE_MILLION_TOKENS__USD = 0.15
+OPENAI_COST__PER_COMPLETION_ONE_MILLION_TOKENS__USD = 0.60
 OPENAI_COST__DECIMALS = 4
 
 OPEN_AI_USE_COMPLEX_PROMPT = True  # If True, then use a more complex prompt (may be slower and slightly more expensive).
