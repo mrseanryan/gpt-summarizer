@@ -160,6 +160,14 @@ If an output directory is specified as an option, then each input file has an eq
 
 ## Set up
 
+Install poetry.
+
+Set the local environment to use Python 3.11:
+
+```
+poetry env use 3.11
+```
+
 **gpt-summary** can be used in 2 ways:
 
 1 - via remote LLM on Open-AI (Chat GPT)
